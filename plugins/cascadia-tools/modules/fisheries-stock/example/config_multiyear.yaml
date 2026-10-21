@@ -1,0 +1,19 @@
+# Multi-year (cohort) catch curve: smallmouth bass aged from fall boat electrofishing, 2019-2024
+# (SIMULATED data, see README_data.md). One row per survey year x age with the number of fish.
+# Question: what is total annual mortality of adult smallmouth bass?
+settings:
+  model: catch_curve
+  primary: cohort_glmm             # cohort_glmm (default with several years) | cohort_bayes | chapman_robson | weighted_regression
+  glmm_interval: reml_t            # wald | reml_t | profile | boot_pct | boot_t
+  bayes: true                      # also fit the Bayesian cohort catch curve in Nimble as a cross-check
+  age_full: peak_plus              # first age: peak of the pooled age composition + 1
+  z_trend: false                   # true: also estimate a linear change in Z per year (Z_trend)
+data:
+  file: multiyear_ages.csv
+  year_col: survey_year            # sampling year: makes this a multi-year catch curve
+  age_col: age
+  count_col: n_fish                # number of fish of that age in that year's sample
+  species: smallmouth bass
+  gear: boat electrofishing
+figures:
+  journal: cjfas

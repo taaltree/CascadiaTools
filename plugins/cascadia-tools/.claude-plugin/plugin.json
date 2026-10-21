@@ -1,7 +1,7 @@
 {
   "name": "cascadia-tools",
   "displayName": "CascadiaTools",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Validated analysis modules and protocols for ecology, wildlife, fisheries and conservation genetics: planted-truth checks, power analysis, biological interpretation and publication figures.",
   "author": {
     "name": "Taal Levi, Cascadia Wildlife Lab",

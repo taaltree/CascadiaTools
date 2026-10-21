@@ -17,6 +17,7 @@ params:
   sel_slope: 3           # logistic selectivity slope
 settings:
   model: catch_curve
-  primary: weighted_regression
+  primary: bayes             # the module default since 2026-10-21 (VALIDATION.md section 5)
+  glmm_interval: reml_t
   age_full: peak_plus
   age_full_regression: peak

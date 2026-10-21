@@ -55,3 +55,32 @@ and lengths, basins and dates were added, and the ages of rows 17 and 203 were s
 to NA. A rerun on 2026-10-20 reproduced the shipped CSV exactly
 (`logs/fisheries-stock_si_check.log`). The true values are also saved in
 `dev/fisheries-stock/example_truths.rds` (element `cc`).
+
+# Example data: smallmouth bass ages from six fall surveys (SIMULATED, multi-year)
+
+`multiyear_ages.csv` is **simulated** with the module's own multi-year simulator,
+so the true answer is known. Story: a river smallmouth bass population is sampled
+by boat electrofishing each fall from 2019 to 2024; about 200 fish a year are aged
+from scales/otoliths. The biologist wants total annual mortality of adults.
+
+| column | meaning |
+|---|---|
+| `survey_year` | year of the fall survey (2019-2024) |
+| `age` | age in years |
+| `n_fish` | number of fish of that age in that year's aged sample (rows with 0 fish are omitted) |
+
+Design: 6 years x 200 aged fish (1,200 fish), ages 0-16, logistic selectivity
+(age at 50% 2.3 years, slope 3), oldest age in the population 16. The same year
+classes are followed from year to year (the weak 2017 year class shows up as low
+counts at age 3 in 2020, age 4 in 2021, age 5 in 2022 ...).
+
+| parameter | true value |
+|---|---|
+| Z | 0.6 per year (annual survival 0.549, annual mortality 0.451) |
+| recruit_sd_cc | 0.5 (lognormal SD of year-class strength; no trend, no autocorrelation) |
+| Z_trend | 0 (mortality constant over the six years) |
+
+Made by `dev/fisheries-stock/make_multiyear_example.R` (`module$simulate()` with
+`cc_years = 6`, `n_fish = 200`, `max_age = 16`, `first_year = 2019`, seed 2024).
+Fit with `config_multiyear.yaml`; planted-truth check with `recovery_multiyear.yaml`
+(results in `results/fisheries-stock/example_multiyear/`).

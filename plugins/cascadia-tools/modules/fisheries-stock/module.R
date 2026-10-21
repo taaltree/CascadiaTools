@@ -2,8 +2,9 @@
 #
 # Three analyses, chosen by settings$model (or data$model; design$model in
 # simulation):
-#   catch_curve         total mortality Z from catch-at-age (Chapman-Robson
-#                       + weighted regression; Smith et al. 2012)
+#   catch_curve         total mortality Z from catch-at-age (Chapman-Robson,
+#                       weighted regression, Poisson-lognormal GLMM, Bayesian
+#                       Nimble catch curve; multi-year cohort catch curve)
 #   stock_recruit       Ricker / Beverton-Holt stock-recruitment with
 #                       reference points; least squares or Bayesian (Nimble)
 #                       with AR(1) recruitment residuals
@@ -12,7 +13,8 @@
 #                       MSY, B/B_MSY, F/F_MSY, Kobe plot
 #
 # Data structure (what simulate()$data and read_data() both return):
-#   catch_curve:        list(model, df = data.frame(age, catch), meta)
+#   catch_curve:        list(model, df = data.frame(age, catch), long = NULL or
+#                       data.frame(year, age, catch) for multi-year samples, meta)
 #   stock_recruit:      list(model, sr_form, spr0, df = data.frame(year, spawners, recruits), meta)
 #   surplus_production: list(model, df = data.frame(year, catch, index), meta)
 
@@ -80,7 +82,9 @@ fs_plots <- function(fit, data) {
 FS_SETTINGS <- list(
   model = NULL,
   # catch curve
-  age_full = "peak_plus", age_full_regression = "peak", age_last = NULL, overdispersion = TRUE, primary = "weighted_regression",
+  # primary = NULL: module default for single-year data (CC_DEFAULT_PRIMARY), cohort_glmm for multi-year data
+  age_full = "peak_plus", age_full_regression = "peak", age_last = NULL, overdispersion = TRUE, primary = NULL,
+  glmm_interval = NULL, n_boot = NULL, zero_tail = 5, bayes = FALSE, prior_yc_sd = 1, z_trend = FALSE,
   # stock-recruitment
   sr_form = NULL, sr_engine = "ls", ar1 = TRUE, spr0 = NULL, n_draws = 4000, beta_max = NULL,
   # MCMC (stock_recruit with sr_engine = nimble; surplus_production)
@@ -114,13 +118,15 @@ module <- ecomodule(
   fast_settings = list(fast = TRUE, n_draws = 2000),
   power_params = c("density_dependence_beta", "B_over_BMSY_final"),
   null_values = c(density_dependence_beta = 0, B_over_BMSY_final = 1),
-  engine = "FSA (catch curves); stats lm/optim or nimble (stock-recruitment); nimble (surplus production)",
+  engine = "FSA, glmmTMB and nimble (catch curves); stats lm/optim or nimble (stock-recruitment); nimble (surplus production)",
   references = c(
     "Chapman DG, Robson DS (1960) The analysis of a catch curve. Biometrics 16:354-368.",
     "Hoenig JM, Lawing WD, Hoenig NA (1983) Using mean age, mean length and median length data to estimate the total mortality rate. ICES CM 1983/D:23.",
     "Smith MW, Then AY, Wor C, Ralph G, Pollock KH, Hoenig JM (2012) Recommendations for catch-curve analysis. North American Journal of Fisheries Management 32:956-967.",
     "Millar RB (2015) A better estimator of mortality rate from age-frequency data. Canadian Journal of Fisheries and Aquatic Sciences 72:364-375.",
+    "Nelson GA (2019) Bias in common catch-curve methods applied to age frequency data from fish surveys. ICES Journal of Marine Science 76(7):2090. doi:10.1093/icesjms/fsz085",
     "Maceina MJ, Bettoli PW (1998) Variation in largemouth bass recruitment in four mainstream impoundments on the Tennessee River. North American Journal of Fisheries Management 18:998-1003.",
+    "Brooks ME, Kristensen K, van Benthem KJ, Magnusson A, Berg CW, Nielsen A, Skaug HJ, Maechler M, Bolker BM (2017) glmmTMB balances speed and flexibility among packages for zero-inflated generalized linear mixed modeling. The R Journal 9:378-400.",
     "Ogle DH, Doll JC, Wheeler AP, Dinno A (2025) FSA: Simple Fisheries Stock Assessment Methods. R package version 0.10.1.",
     "Ricker WE (1954) Stock and recruitment. Journal of the Fisheries Research Board of Canada 11:559-623.",
     "Beverton RJH, Holt SJ (1957) On the Dynamics of Exploited Fish Populations. Fishery Investigations Series II, 19. HMSO, London.",

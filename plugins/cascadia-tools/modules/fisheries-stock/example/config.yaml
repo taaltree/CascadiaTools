@@ -2,9 +2,12 @@
 # Question: what is total annual mortality of adult walleye?
 settings:
   model: catch_curve
-  primary: weighted_regression     # weighted_regression (default) | chapman_robson | glmm
-  age_full: peak_plus              # first age for Chapman-Robson / GLMM: peak_plus | peak | an age, e.g. 4
+  primary: bayes                   # bayes (default) | glmm | chapman_robson | weighted_regression
+  glmm_interval: reml_t            # GLMM interval: reml_t (default) | wald | profile | boot_pct | boot_t
+  age_full: peak_plus              # first age for Chapman-Robson / GLMM / Bayes: peak_plus | peak | an age, e.g. 4
   age_full_regression: peak        # first age for the weighted regression
+  # zero_tail: 5                   # zero-catch ages added beyond the oldest fish (GLMM and Bayes)
+  # prior_yc_sd: 1                 # scale of the half-Normal prior on the year-class SD (Bayes)
 data:
   file: walleye_fall_gillnet_ages.csv
   age_col: age                     # one row per fish; or give count_col for a catch-at-age table
@@ -19,12 +22,14 @@ figures:
   # greyscale: false               # true for black-and-white print (Kobe quadrants become greys)
   # ci: 0.95                       # outer band/interval level
   # inner_ci: 0.5                  # inner credible band (Bayesian fits)
-  # include: [catch_curve, mortality_estimates]
+  # include: [catch_curve, mortality_estimates, trace]
   # labels:                        # rename axes, estimators and point classes
   #   age: "Otolith age (years)"
   #   log_catch: "Number caught (natural log)"
   #   chapman_robson: "Chapman-Robson"
   #   weighted_regression: "Weighted regression"
+  #   glmm: "GLMM (year-class RE)"
+  #   bayes: "Bayesian (Nimble)"
   #   not_used: "Not fully recruited"
   # per_figure:
   #   catch_curve: {width: onehalf, aspect: 0.7}
