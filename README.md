@@ -42,11 +42,16 @@ and a validation record (`VALIDATION.md`) with its recovery results and known li
    Windows: also install Rtools. Mac: run `xcode-select --install` in Terminal.
 2. **Install Claude Code**: the Claude desktop app (Code tab) or the terminal version;
    see https://claude.com/claude-code.
-3. **Add CascadiaTools.** In Claude Code, type:
-   ```
-   /plugin marketplace add taaltree/CascadiaTools
-   /plugin install cascadia-tools@cascadia
-   ```
+3. **Add CascadiaTools.**
+   - *Desktop app (point and click):* in the Code tab, open the plugins window (the **+** button →
+     **Add plugins**, or type `/plugin` and press Enter). Under **Marketplaces**, choose **Add marketplace**
+     and enter `taaltree/CascadiaTools`; then find **cascadia-tools** under **Discover** and click **Install**.
+   - *Typed commands (desktop app or terminal):*
+     ```
+     /plugin marketplace add taaltree/CascadiaTools
+     /plugin install cascadia-tools@cascadia
+     ```
+   Then type `/reload-plugins` or start a new session.
 4. **Finish setup.** Open a folder for your project in Claude Code and type
    *"Set up CascadiaTools"*. It installs the R packages and runs a test.
 

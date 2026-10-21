@@ -12,6 +12,8 @@ Install in Claude Code:
 ```
 
 (or `/plugin marketplace add taaltree/CascadiaTools` then `/plugin install cascadia-tools@cascadia`).
+In the Claude desktop app you can instead open the plugins window (**+** → **Add plugins**), add the
+marketplace `taaltree/CascadiaTools` and install **cascadia-tools** from it.
 
 Start with *"Show me what CascadiaTools can do"* (skill `cascadia-start`), or
 *"Set up CascadiaTools"* (skill `cascadia-setup`) on a new computer. Requires R 4.5+.
