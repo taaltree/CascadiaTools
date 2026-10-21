@@ -1,0 +1,3 @@
+# Zero-inflated Poisson GLMM, 20% structural zeros
+params: {zi_prob: 0.2}
+design: {family: zipoisson}

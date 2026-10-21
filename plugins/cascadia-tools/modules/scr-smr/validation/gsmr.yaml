@@ -1,0 +1,4 @@
+# gSMR: marking at a 5x5 box-trap grid (1.5 km) centred on the camera grid,
+# 5 marking occasions; marked animals are concentrated in the centre.
+design:
+  model: gsmr

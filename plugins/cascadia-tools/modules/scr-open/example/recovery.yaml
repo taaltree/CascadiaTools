@@ -1,0 +1,22 @@
+# Planted-truth recovery at the design of the bundled marten example.
+# The example data were simulated by dev/scr-open/make_example.R:
+#   module$simulate(module$defaults$params, module$defaults$design, seed = 2025)
+# so the design and true parameter values here are exactly the module defaults.
+# Settings: the module's fast_settings (Nimble marginal, 3 chains x 10,000, 4,000 burn-in, thin 2).
+params:
+  density: 0.8                  # animals per km2 alive in period 1
+  baseline_detection: 0.3       # p0, per occasion at the activity centre
+  sigma: 800                    # m, half-normal scale
+  survival: 0.8                 # apparent survival between years
+  per_capita_recruitment: 0.25  # recruits per animal alive the year before (Poisson)
+  density_beta_canopy: 1.0      # log density ratio per 1 SD of canopy cover
+design:
+  trap_grid_side: 7             # 7 x 7 = 49 hair snares
+  trap_spacing: 1000            # m
+  n_occasions: 5                # weekly checks per summer
+  n_periods: 5                  # summers 2020-2024
+  buffer: 3000                  # m around the snares
+  mask_spacing: 400             # m habitat-grid pixels
+  density_covariate: true
+  covariate_range: 2000         # m, smoothing scale of the canopy field
+  trap_failure: 0.05            # chance per snare and summer of failing part-way

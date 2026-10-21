@@ -1,0 +1,10 @@
+# Count MEDIATOR: shrub stems per plot (Poisson) mediate fire/moisture -> birds; 150 plots.
+# Unstandardised indirect effects through a count mediator mix link and response scales
+# (the module warns); the products are still checked against their planted values.
+params: {int_shrub: 1.5, canopy_to_shrub: -0.3, moisture_to_shrub: 0.25, shrub_to_birds: 0.06, int_birds: 1.2}
+design:
+  n_units: 150
+  model:
+    - {formula: "canopy ~ fire", family: gaussian}
+    - {formula: "shrub ~ canopy + moisture", family: poisson}
+    - {formula: "birds ~ shrub + fire", family: poisson}

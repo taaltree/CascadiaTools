@@ -1,0 +1,3 @@
+# 500 biallelic SNPs, finite island model with 6 demes (IBD slope truth = 0)
+params: {m: 0.05}
+design: {model: island, n_pops: 6, n_loci: 500, n_ind: 20, marker: snp, missing_rate: 0.05}

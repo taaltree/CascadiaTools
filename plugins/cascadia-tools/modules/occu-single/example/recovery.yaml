@@ -1,0 +1,22 @@
+# Planted-truth recovery at the design of the static example (example/config.yaml, pileated woodpecker).
+# Values are the TRUE generating values of the example data, converted to the module's reporting
+# scale by dev/occu-single/si_truth.R (results/occu-single/si/truth.json):
+#   occupancy_prob 0.406  (occupancy at mean forest cover 58.2% and mean elevation 834 m)
+#   detection_prob 0.402  (per-visit detection on the mean survey day 142, observer AB)
+#   psi_beta_forest 1.05  (forest cover: logit change per 1 SD = 23.9 percentage points)
+#   p_beta_effort  -0.532 (survey date: logit change per 1 SD = 13.3 days)
+# Design: 120 stands, up to 4 visits, 15.6% of the 480 possible visits not done (405 done).
+# The module simulator has one occupancy covariate and one detection covariate, so elevation
+# (-0.475 per SD) and observer are not simulated; this is stated in WALKTHROUGH.md.
+# Run: scripts/ejob -c 16 -m 32 -t 3:00:00 -l logs/occu-single_si_recover.log -- scripts/Rscript core/run.R recover occu-single --config modules/occu-single/example/recovery.yaml --nsim 200 --cores 16 --out results/occu-single/si/recovery
+design:
+  model: static
+  n_sites: 120
+  n_surveys: 4
+  prop_missing: 0.156
+  p_site_sd: 0
+params:
+  occupancy_prob: 0.406
+  detection_prob: 0.402
+  psi_beta_forest: 1.05
+  p_beta_effort: -0.532

@@ -1,0 +1,47 @@
+# Example: 10 GPS-collared elk, 2-hour fixes, summer 2024 (simulated data in the
+# format collar companies deliver). Run:
+#   scripts/ejob -c 8 -m 16 -- scripts/Rscript core/run.R fit movement-ssf \
+#       --config modules/movement-ssf/example/config.yaml --out results/movement-ssf/example
+data:
+  fixes: elk_gps_2024.csv        # one row per fix attempt; rows without coordinates are dropped
+  id: animal_id                  # animal (collar deployment) identifier
+  time: timestamp                # date-time of the fix
+  timezone: UTC
+  time_format: "%Y-%m-%d %H:%M:%S"
+  x: utm_e                       # projected easting (m)
+  "y": utm_n                     # projected northing (m)
+  crs: "EPSG:32611"              # CRS of x/y and of the rasters (UTM zone 11N)
+  rasters:                       # one GeoTIFF per habitat covariate, same CRS
+    forest: forest_cover.tif
+    elevation: elevation.tif
+  labels: {forest: "Forest cover (%)", elevation: "Elevation (m)"}
+  names: {forest: "forest cover", elevation: "elevation"}
+  units: {forest: 10, elevation: 100}            # biologically meaningful change for RSS
+  unit_text: {forest: "10 percentage points of forest cover", elevation: "100 m of elevation"}
+  animal_label: elk
+settings:
+  n_control: 20                  # available steps per used step
+  interval_hours: 2              # collar schedule; omit to use the median fix interval
+  random_slopes: true
+  home_attraction: true           # range residency: squared distance to an estimated centre per animal
+  rsf: true
+  home_range: true
+figures:                         # publication figures (docs/FIGURES.md); every key optional
+  journal: esa                   # sets widths and base font size
+  width: single
+  formats: [pdf, png]
+  dpi: 600
+  ci: 0.95                       # band/interval level for RSS curves and selection coefficients
+  show_data: true                # rug on RSS curves, GPS fixes on home-range maps
+  greyscale: false
+  # include: [rss_forest, rss_elevation, selection_coefficients, movement_kernel, used_available, uhc, home_ranges, hr_area]
+  # exclude: [uhc]
+  labels:                        # rename axes, legend entries and animals
+    rss: "Relative selection strength (RSS)"
+    step_length: "Step length (m per 2 h)"
+    used: "Used"
+    available: "Available"
+    # E01: "Elk 1 (F, 2019 collar)"
+  per_figure:
+    hr_area: {width: single}
+    # rss_forest: {ylim: [0.1, 10]}

@@ -1,0 +1,34 @@
+# Binary exposure (grazed yes/no) and binary outcome (native forb present), 300 pastures.
+design:
+  dag: |
+    dag {
+      soil_moisture -> grazed
+      soil_moisture -> native
+      slope -> grazed
+      slope -> native
+      water_dist -> grazed
+      grazed -> litter
+      litter -> native
+      grazed -> native
+      grazed -> erosion
+      native -> erosion
+    }
+  exposure: grazed
+  outcome: native
+  family: binomial
+  exposure_type: binary
+  n_sites: 300
+  effect: total
+params:
+  b_soil_moisture__grazed: 0.8
+  b_soil_moisture__native: 0.7
+  b_slope__grazed: -0.6
+  b_slope__native: 0.4
+  b_water_dist__grazed: -0.7
+  b_grazed__litter: -0.8
+  b_litter__native: 0.4
+  b_grazed__native: -0.6
+  b_grazed__erosion: 0.5
+  b_native__erosion: -0.5
+  intercept: 0.2
+  exposure_intercept: 0

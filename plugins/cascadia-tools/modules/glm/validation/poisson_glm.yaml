@@ -1,0 +1,3 @@
+# Poisson GLM with effort offset, 150 units, no random effect
+params: {}
+design: {family: poisson, n_groups: 0, n: 150}

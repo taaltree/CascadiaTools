@@ -1,0 +1,31 @@
+# Planted-truth (recovery) check at the EXAMPLE's design: 8 streams, 18-32 frogs per stream,
+# 12 microsatellites with up to 14 alleles, 3% missing genotypes, IBD on log distance.
+# Parameter values are those used to simulate the example (dev/popgen-structure/gen_example.R):
+# Ne 100-150 per stream and Ne = 30 in the 4th stream (Drift Creek analogue), mutation 5e-4,
+# 150 generations, 5% of parents immigrant per generation.
+# What the module's simulator cannot copy exactly: the example used a distance kernel over the
+# real stream coordinates and made Drift Creek nearly isolated (0.4% immigrants). The module's
+# simulator places the 8 streams on a 3 x 3 grid (spacing_km apart) with 2-D stepping-stone
+# dispersal at one shared rate m. The exact generating process is checked separately by
+# dev/popgen-structure/si/si_exact_recovery.R (results/popgen-structure/si/recovery_exact/).
+# Run: scripts/ejob -c 16 -m 32 -t 3:00:00 -l logs/popgen-structure_si_recover.log -- \
+#   scripts/Rscript core/run.R recover popgen-structure --config modules/popgen-structure/example/recovery.yaml \
+#   --nsim 200 --cores 16 --out results/popgen-structure/si/recovery
+params:
+  Ne: [150, 150, 120, 30, 150, 150, 120, 100]
+  m: 0.05
+  selfing: 0
+  mu: 0.0005
+  n_alleles: 14
+  alpha: 1
+  T_gen: 150
+design:
+  model: stepping_stone_2d
+  n_pops: 8
+  spacing_km: 15
+  n_ind: [30, 24, 28, 18, 32, 26, 22, 20]
+  n_loci: 12
+  marker: microsat
+  missing_rate: 0.03
+  ibd_distance: log
+  truth: realised

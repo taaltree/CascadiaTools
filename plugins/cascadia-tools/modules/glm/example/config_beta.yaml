@@ -1,0 +1,15 @@
+# Seagrass cover (proportion of quadrat, strictly between 0 and 1) vs depth and turbidity.
+data:
+  file: seagrass_cover.csv
+  formula: cover_prop ~ depth_m + turbidity_ntu + (1|transect)
+  family: beta
+  units:
+    depth_m: 1
+    turbidity_ntu: 5
+  unit_text:
+    depth_m: m
+    turbidity_ntu: NTU
+  labels:
+    depth_m: water depth (m)
+    turbidity_ntu: turbidity (NTU)
+  response_label: seagrass cover (proportion)

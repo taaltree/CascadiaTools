@@ -1,0 +1,2 @@
+# NEGATIVE CONTROL: main estimate omits the confounder width.
+settings: {force_adjust: [elevation, sediment]}

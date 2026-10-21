@@ -1,0 +1,2 @@
+# Harder design 1: short tracks (3 animals x 150 hourly fixes = 450 steps)
+design: {n_animals: 3, n_fixes: 150}

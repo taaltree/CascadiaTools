@@ -1,0 +1,11 @@
+# Example: the single-herd series fitted with the stochastic Gompertz state-space
+# model (GSS; Dennis et al. 2006) by maximum likelihood, with the parametric-
+# bootstrap test for density dependence. Compare with config.yaml (model: bayes).
+data:
+  file: herd_counts.csv
+  year: year
+  count: animals_counted
+  count_label: "Animals counted"
+settings:
+  model: gompertz
+  dd_test_boot: 199

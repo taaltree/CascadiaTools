@@ -1,0 +1,4 @@
+# Harder hierarchical: 6 groups x 40 fish, Z = 0.6 (few old fish, few groups).
+# Longer chains than fast_settings: at 3000 iterations only 44/100 reps reached R-hat < 1.05.
+design: {hierarchical: true, n_groups: 6, n_per_group: 40, Z: 0.6}
+settings: {engine: nimble, group_effects: random, niter: 15000, nburnin: 5000}

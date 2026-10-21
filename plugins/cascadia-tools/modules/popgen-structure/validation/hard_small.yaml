@@ -1,0 +1,3 @@
+# Harder: few loci, few individuals, weak structure, 6 populations
+params: {m: 0.1}
+design: {n_pops: 6, n_loci: 8, n_ind: 10}

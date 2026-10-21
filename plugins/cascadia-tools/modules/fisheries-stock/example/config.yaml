@@ -1,0 +1,30 @@
+# Catch curve: walleye from the 2025 fall experimental gill-net survey (one row per aged fish; otolith ages).
+# Question: what is total annual mortality of adult walleye?
+settings:
+  model: catch_curve
+  primary: weighted_regression     # weighted_regression (default) | chapman_robson | glmm
+  age_full: peak_plus              # first age for Chapman-Robson / GLMM: peak_plus | peak | an age, e.g. 4
+  age_full_regression: peak        # first age for the weighted regression
+data:
+  file: walleye_fall_gillnet_ages.csv
+  age_col: age                     # one row per fish; or give count_col for a catch-at-age table
+  species: walleye
+  gear: experimental gill net
+figures:
+  journal: cjfas
+  # Optional customisation (see skills/eco-figures). Uncomment and edit; then
+  # redraw without refitting: scripts/Rscript core/run.R figures fisheries-stock --fit <out>/fisheries-stock_fit.rds --config <this file>
+  # width: single                  # single | onehalf | double | mm
+  # formats: [pdf, png, tiff]
+  # greyscale: false               # true for black-and-white print (Kobe quadrants become greys)
+  # ci: 0.95                       # outer band/interval level
+  # inner_ci: 0.5                  # inner credible band (Bayesian fits)
+  # include: [catch_curve, mortality_estimates]
+  # labels:                        # rename axes, estimators and point classes
+  #   age: "Otolith age (years)"
+  #   log_catch: "Number caught (natural log)"
+  #   chapman_robson: "Chapman-Robson"
+  #   weighted_regression: "Weighted regression"
+  #   not_used: "Not fully recruited"
+  # per_figure:
+  #   catch_curve: {width: onehalf, aspect: 0.7}

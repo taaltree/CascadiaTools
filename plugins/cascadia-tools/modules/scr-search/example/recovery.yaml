@@ -1,0 +1,26 @@
+# Planted-truth recovery at the design of the fisher scat-dog example (example/config.yaml).
+# Truth = the generating values of dev/scr-search/make_example.R (seed 2025): module default
+# parameters, default design except road_bias 0.4 and cov_road_corr 0.3 (as in the example).
+# One fit takes ~290 s on one core (VALIDATION.md), so nsim = 100 (rule: 100 if a fit > 1 min).
+#   scripts/ejob -c 16 -m 32 -t 3:00:00 -l logs/scr-search_si_recover.log -- scripts/Rscript core/run.R recover scr-search \
+#     --config modules/scr-search/example/recovery.yaml --nsim 100 --cores 16 --out results/scr-search/si/recovery
+design:
+  search_side: 16000        # 16 x 16 km searched region
+  buffer: 6000              # 6 km buffer -> 784 km2 state space
+  mask_spacing: 700         # 700 m habitat pixels (habitat_grid.csv)
+  cell_size: 1000           # 1 km detector cells (config.yaml)
+  n_occasions: 3            # 3 monthly sessions (June, July, August)
+  tracks_per_occasion: 12   # 36 dog-team routes in all
+  track_km: [4, 10]         # routes of 4-10 km (~247 km searched)
+  n_roads: 3
+  road_bias: 0.4            # 40% of routes follow forest roads
+  cov_road_corr: 0.3        # roads run moderately through more-forested ground
+  covariate_range: 3000
+  density_covariate: true   # forest cover
+  detection_covariate: true # experienced dog team
+params:
+  density: 0.10                         # fishers per km2 (expected; ~78 in the 784 km2 state space)
+  lambda0_per_km: 0.20                  # scats found per km searched at an activity centre (novice team)
+  sigma: 1500                           # m (95% home range ~42 km2)
+  density_beta_forest: 0.5              # log density ratio per 1 SD of forest cover (rate ratio 1.65)
+  detection_beta_experienced_team: 0.6  # log ratio, experienced vs novice team (rate ratio 1.82)

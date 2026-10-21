@@ -1,0 +1,23 @@
+# Hermit warbler: 140 point-count stations (3 visits) and 140 autonomous recording
+# units (ARUs, 5 mornings); 60 locations have both. Question: is occupancy associated
+# with canopy cover, using both data sources with method-specific detection?
+data:
+  detections: warbler_detections.csv   # point x method x visit, detected 0/1
+  sites: warbler_points.csv
+  site_col: point
+  survey_col: visit
+  source_col: method                   # survey method / data source
+  detection_col: detected
+  x_col: easting
+  y_col: northing
+  coord_units: m
+formulas:
+  psi: "~ canopy_cover_pct"
+  p:                                   # detection formula per method
+    point_count: "~ hours_after_sunrise"
+    ARU: "~ wind_kph"
+settings:
+  model: intPGOcc
+figures:
+  labels:
+    canopy_cover_pct: "Canopy cover (%)"

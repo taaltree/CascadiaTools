@@ -1,0 +1,4 @@
+# Harder state-space design: 15 years, 20% of years unsurveyed, counting error larger than process noise
+params: {sigma2: 0.015, tau2: 0.03}
+design: {model: count, method: state_space, p_missing: 0.2, n_years: 15}
+settings: {model: count, method: state_space}

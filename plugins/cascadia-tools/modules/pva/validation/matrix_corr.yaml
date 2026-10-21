@@ -1,0 +1,4 @@
+# Correlated environment (rho = 0.4 among all vital rates), otherwise as matrix_default.
+# Added by the independent verification: tests the correlated parameter-uncertainty draws.
+design: {model: matrix, threshold: 20, horizons: [10, 25, 50], env_correlation: 0.4}
+settings: {model: matrix}

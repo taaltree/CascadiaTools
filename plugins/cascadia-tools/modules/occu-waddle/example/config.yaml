@@ -1,0 +1,51 @@
+# Example: Cuban treefrog (invasive, treated as the dominant species) and
+# green treefrog (native, subordinate) in PVC-pipe refugia surveys, southern
+# Florida, 180 sites x 5 visits (June-September 2023). The data are SIMULATED
+# in the format of Waddle et al. (2010) to illustrate the module; they are not
+# field data.
+# Question: is green treefrog occupancy lower where Cuban treefrogs occur, and
+# is green treefrog detection lower on visits when Cuban treefrogs are found
+# in the pipes?
+data:
+  detections: pipe_surveys.csv      # one row per site x visit
+  format: wide                      # one 0/1 column per species
+  site_col: site_id
+  survey_col: visit
+  dominant_col: cuban_treefrog
+  subordinate_col: green_treefrog
+  dominant: Cuban treefrog          # display names used in the report
+  subordinate: green treefrog
+  surveyed_col: pipes_checked       # 0 = site not visited that round
+  obs_covs: [air_temp_c]
+  site_covs: sites.csv              # one row per site
+formulas:
+  psiA:  "~ log(dist_road_m)"       # Cuban treefrog occupancy
+  psiBA: "~ canopy_pct"             # green treefrog occupancy where Cuban treefrog present
+  psiBa: "~ canopy_pct"             # green treefrog occupancy where Cuban treefrog absent
+  pA:    "~ air_temp_c"             # Cuban treefrog detection (green absent)
+  pB:    "~ air_temp_c"             # green treefrog detection (Cuban absent)
+  rA:    "~ 1"                      # Cuban treefrog detection where both occur
+  rBA:   "~ 1"                      # green detection where both occur, Cuban detected that visit
+  rBa:   "~ 1"                      # green detection where both occur, Cuban not detected that visit
+settings:
+  engine: nimble
+  niter: 6000
+  nburnin: 1000
+  nchains: 3
+figures:                            # publication figures (docs/FIGURES.md); redraw with core/run.R figures
+  journal: esa                      # sets widths and font size
+  width: single                     # default width; some figures ask for onehalf/double
+  formats: [pdf, png]
+  ci: 0.95                          # outer credible-interval band
+  inner_ci: 0.5                     # inner band / thick line (Bayesian)
+  greyscale: false                  # true: grey shades, linetype/shape keep quantities apart
+  labels:                           # rename covariates, species and quantities
+    dist_road_m: "Distance to nearest road (m)"
+    canopy_pct: "Canopy cover (%)"
+    air_temp_c: "Air temperature (°C)"
+    # dominant: "Cuban treefrog"    # species display names (default from data:)
+    # psiBA: "Green treefrog, Cuban present"   # any quantity: psiA psiB psiBA psiBa sif pA pB rA rBA rBa
+    # occupancy_axis: "Probability of occupancy"
+  # include: [conditional_occupancy, sif, detection_interaction, coefficients]
+  # per_figure:
+  #   coefficients: {width: double}

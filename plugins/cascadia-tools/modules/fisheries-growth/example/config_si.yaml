@@ -1,0 +1,36 @@
+# SIMULATED worked example (Supporting Information S1 / website walkthrough).
+# A simulated autumn 2014 gill-net survey of walleye: do females and males differ
+# in growth and condition? Data made by dev/fisheries-growth/make_si_example.R
+# (seed 20141015); true values in sim_walleye_2014_truth.json and README_data.md.
+# The real-data example (FSAdata Lake Erie walleye) is config.yaml.
+data:
+  file: sim_walleye_2014.csv
+  fish_id: fish_id
+  age: age              # otolith age (years)
+  length: tl_mm         # total length
+  weight: wt_g          # optional; blank = not weighed
+  group: sex
+  reference_group: female
+  age_offset: 0.5       # caught in Oct, about half a year after the spring hatch
+  length_units: mm
+  weight_units: g
+  reference_length: 500 # report mean weight of a 500 mm fish
+  standard_weight: {species: Walleye, group: overall, units: metric}   # Murphy et al. 1990
+settings:
+  engine: nls
+  error: multiplicative
+figures:
+  journal: cjfas
+  width: single
+  formats: [pdf, png]
+  ci: 0.95
+  show_data: true
+  greyscale: false
+  labels:
+    female: "Female"
+    male: "Male"
+    length: "Total length (mm)"
+    weight: "Wet weight (g)"
+    condition: "Relative weight (Wr)"
+  per_figure:
+    parameter_comparison: {width: double}

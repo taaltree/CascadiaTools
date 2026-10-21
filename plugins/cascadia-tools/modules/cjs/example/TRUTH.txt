@@ -1,0 +1,10 @@
+# True values used to simulate the example (for checking the example fit)
+survival_F: 0.55
+beta_M: 0.3
+beta_wmin: 0.4
+beta_mass: 0.25
+transient: 0.25
+pF: 0.45
+beta_pM: 0.5
+# beta_wmin and beta_mass are logit-scale effects per 1 SD of the covariate (SD over years / over birds); survival_F is for a resident female at mean covariates
+n_birds: 575; captures: 1283; transients: 147

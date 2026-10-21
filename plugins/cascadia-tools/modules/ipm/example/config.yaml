@@ -1,0 +1,32 @@
+# Red-backed shrike (Lanius collurio) study plot, 2006-2020: females only.
+# Question: how has the breeding population changed, which vital rates drive
+# its ups and downs, and how much does it depend on immigration? Is first-year
+# survival associated with rainfall in the Sahel wintering area?
+# (Simulated with known truth so the fit can be checked: see TRUTH.txt.)
+data:
+  species: red-backed shrike
+  count_unit: breeding females
+  counts: shrike_counts.csv          # one row per year; empty = no survey that year
+  count_col: females_counted
+  captures: shrike_captures.csv      # one row per ring per season (long format)
+  capture_format: long               # long | wide | marray
+  id_col: ring
+  age_col: age                       # age at THAT capture: nestling/juvenile = young of the year; adult / yearling / SY = breeder
+  productivity: shrike_broods.csv    # one row per monitored nest
+  fledglings_col: fledglings
+  mother_age_col: female_age         # yearling (first-time breeder) vs older; drop the column for one fecundity
+  age_specific_fecundity: auto
+  covariates: sahel_rainfall.csv     # one row per year; value in year t acts on the interval t -> t+1
+  effects:
+    juvenile_survival: [sahel_rain_mm]
+settings:
+  immigration: true
+  temporal_variation: true
+  count_model: poisson               # or normal (estimates the count SD)
+  sex_ratio: 0.5
+figures:
+  labels:
+    sahel_rain_mm: "Sahel rainfall (mm, Jul-Sep)"
+  per_figure:
+    population_composition: {legend: bottom, width: onehalf, aspect: 0.6, axis: {y: "Breeding females"}}   # legend on the right squeezed the bars (year labels overlapped)
+    growth_rate: {axis: {y: "Growth rate (N[t+1] / N[t])"}, xlim: [2005.5, 2020.5]}   # long y label and the 2020 tick were clipped

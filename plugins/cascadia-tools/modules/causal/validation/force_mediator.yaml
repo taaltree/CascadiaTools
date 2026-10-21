@@ -1,0 +1,2 @@
+# NEGATIVE CONTROL: main estimate forced to also adjust for the mediator (water_temp).
+settings: {force_adjust: [elevation, sediment, width, water_temp]}

@@ -1,0 +1,3 @@
+# Gaussian LMM, 30 groups x 8, no offset. Effects in response units per SD.
+params: {beta_intercept: 10, beta_forest: 1.0, beta_temp: -0.5, beta_habitat_riparian: 0.8, beta_habitat_wetland: -0.6, dispersion: 2, re_sd: 1}
+design: {family: gaussian, offset: null}

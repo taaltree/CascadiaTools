@@ -1,0 +1,22 @@
+# Lake Erie walleye 2003-2014: how much do growth parameters vary among years,
+# and is there a trend over time? Hierarchical Bayesian VB with year as a
+# random effect and calendar year as a group covariate on Linf and K.
+data:
+  file: walleye_lake_erie.csv
+  fish_id: fish_id
+  age: age
+  length: tl_mm
+  weight: wt_g
+  group: year
+  age_offset: 0.5
+  group_covariates: {file: year_covariates.csv, group: year, covariate: calendar_year}
+  reference_length: 500
+  standard_weight: {species: Walleye, group: overall, units: metric}
+settings:
+  engine: nimble
+  group_effects: random
+  error: multiplicative
+  niter: 20000
+  nburnin: 5000
+figures:
+  labels: {calendar_year: "Year"}

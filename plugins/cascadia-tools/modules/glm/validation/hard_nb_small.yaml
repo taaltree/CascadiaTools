@@ -1,0 +1,2 @@
+# HARD: NB GLMM with only 10 sites x 4 visits (40 observations)
+design: {n_groups: 10, n_per_group: 4}

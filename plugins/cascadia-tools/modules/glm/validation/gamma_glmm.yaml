@@ -1,0 +1,3 @@
+# Gamma GLMM (log link), e.g. body mass or biomass, 30 groups x 8
+params: {beta_intercept: 3, beta_forest: 0.2, beta_temp: -0.15, beta_habitat_riparian: 0.25, beta_habitat_wetland: -0.2, dispersion: 0.4, re_sd: 0.3}
+design: {family: Gamma, offset: null, response: mass}

@@ -1,0 +1,4 @@
+# False-positive rate: vital rates giving stochastic lambda ~ 1 (s_ad tuned so truth lambda_s = 1)
+params: {s_ad: 0.7535}
+design: {model: matrix, threshold: 20, horizons: [10, 25, 50]}
+settings: {model: matrix}

@@ -1,0 +1,81 @@
+# Planted-truth check (eco-planted-truth) at the design of the stream-trout example
+# (stream_trout_reaches.csv): 140 reaches, negative binomial trout counts, the 12-arrow
+# stream DAG with natural-unit nodes, contrast +10 percentage points of canopy, total AND
+# controlled direct effect. Params and design are exactly those used to generate the
+# example data (dev/causal/make_examples.R, simulate seed 2024; see README_data.md).
+# Truths (SCM intervention, 4e5 draws): beta 0.02571, ATE 1.954 trout, rate ratio 1.293;
+# direct beta 0.01429, direct ATE 1.023, direct rate ratio 1.154.
+# Run: scripts/ejob -c 16 -m 32 -t 3:00:00 -l logs/causal_si_recover.log -- scripts/Rscript core/run.R recover causal \
+#        --config modules/causal/example/recovery.yaml --nsim 200 --cores 16 --out results/causal/si/recovery
+params:
+  intercept: 1.609438                  # log(5): log expected trout per reach at average conditions
+  theta: 3                             # NB size (overdispersion)
+  sigma: 1
+  exposure_intercept: 0
+  # standardised path coefficients (per SD of parent, on the child's SD scale; log scale for trout)
+  b_elevation_m__canopy_pct: 0.4
+  b_elevation_m__water_temp_c: -0.6
+  b_agriculture_pct__canopy_pct: -0.5
+  b_agriculture_pct__fine_sediment_pct: 0.6
+  b_fine_sediment_pct__trout_per_reach: -0.4
+  b_wetted_width_m__canopy_pct: -0.3
+  b_wetted_width_m__trout_per_reach: 0.3
+  b_canopy_pct__water_temp_c: -0.4
+  b_water_temp_c__trout_per_reach: -0.4
+  b_canopy_pct__trout_per_reach: 0.2
+  b_canopy_pct__periphyton_chla: -0.4
+  b_trout_per_reach__periphyton_chla: 0.5
+  # remove the module's default-DAG coefficients (different node names)
+  b_elevation__canopy: ~
+  b_elevation__water_temp: ~
+  b_agriculture__canopy: ~
+  b_agriculture__sediment: ~
+  b_sediment__trout: ~
+  b_width__canopy: ~
+  b_width__trout: ~
+  b_canopy__water_temp: ~
+  b_water_temp__trout: ~
+  b_canopy__trout: ~
+  b_canopy__algae: ~
+  b_trout__algae: ~
+design:
+  dag: |
+    dag {
+      elevation_m -> canopy_pct
+      elevation_m -> water_temp_c
+      agriculture_pct -> canopy_pct
+      agriculture_pct -> fine_sediment_pct
+      fine_sediment_pct -> trout_per_reach
+      wetted_width_m -> canopy_pct
+      wetted_width_m -> trout_per_reach
+      canopy_pct -> water_temp_c
+      water_temp_c -> trout_per_reach
+      canopy_pct -> trout_per_reach
+      canopy_pct -> periphyton_chla
+      trout_per_reach -> periphyton_chla
+    }
+  exposure: canopy_pct
+  outcome: trout_per_reach
+  family: negbin
+  n_sites: 140
+  contrast: 10                         # +10 percentage points of canopy
+  effect: both
+  exposure_type: continuous
+  node_scale:                          # natural units: c(mean, SD)
+    elevation_m: [620, 240]
+    agriculture_pct: [35, 9]
+    fine_sediment_pct: [18, 5]
+    wetted_width_m: [7.5, 2.0]
+    canopy_pct: [58, 14]
+    water_temp_c: [14.5, 2.2]
+    periphyton_chla: [42, 11]
+  round:                               # same rounding as the field-style CSV
+    elevation_m: 0
+    agriculture_pct: 1
+    fine_sediment_pct: 1
+    wetted_width_m: 1
+    canopy_pct: 0
+    water_temp_c: 1
+    periphyton_chla: 1
+settings:
+  ci_method: unconditional             # as in config.yaml

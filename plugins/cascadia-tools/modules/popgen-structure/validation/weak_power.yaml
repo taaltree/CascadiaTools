@@ -1,0 +1,3 @@
+# Base for power over number of loci: weak structure (island, FST ~ 0.01), 6 pops x 20 individuals
+params: {m: 0.2}
+design: {model: island, n_pops: 6, n_ind: 20}

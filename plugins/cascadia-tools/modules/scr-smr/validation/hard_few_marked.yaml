@@ -1,0 +1,5 @@
+# Harder design: 5 marked animals of ~40 (density 0.14 per km2 over 289 km2).
+params:
+  density: 0.14
+design:
+  n_marked: 5

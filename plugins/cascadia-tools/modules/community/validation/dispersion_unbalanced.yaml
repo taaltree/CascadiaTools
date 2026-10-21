@@ -1,0 +1,5 @@
+# Negative control for PERMANOVA: no species-specific location effect, the SMALL group is 3x noisier
+# (48 vs 12 sites). PERMANOVA's adjusted R2 confounds dispersion with location in unbalanced designs:
+# expected to FAIL on R2adj_habitat_permanova (upward bias).
+params: {group_effect_sd: 0, dispersion_mult: 3}
+design: {n_groups: 2, group_sizes: [48, 12]}

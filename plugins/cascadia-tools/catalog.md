@@ -1,0 +1,227 @@
+# CascadiaTools module catalog
+
+Pick the module whose `when_to_use` matches the researcher's data and question, check its
+`not_for`, then read `modules/<id>/README.md` and `modules/<id>/VALIDATION.md` (known limits)
+before planning. Every module has a worked example in `modules/<id>/example/WALKTHROUGH.md`.
+If nothing fits, say so and follow the eco-new-module skill rather than forcing a poor fit.
+
+## Regression and causal inference
+
+### `glm`: GLM / GLMM with biological interpretation
+
+- **Use when:** One response measured on sampling units (sites, plots, nests, animals, quadrats, surveys) and the question is how it changes with habitat, environmental or treatment predictors, possibly with repeated measures within sites/individuals/years (random intercepts). Counts, presence/absence (0/1), successes out of trials, proportions in (0,1), positive continuous measurements (mass, length, biomass) and normal measurements.
+- **Not for:** Imperfect detection that must be separated from occurrence or abundance (use occupancy / N-mixture modules); spatial or temporal autocorrelation that must be modelled explicitly; random slopes, nested (1|a/b) syntax, splines/GAMs, ordinal or multinomial responses; causal effect estimation (use the causal/SEM modules); proportions containing exact 0s or 1s (transform first or use binomial with trials).
+- **Data:** one CSV, one row per observation, with a response column, predictor columns, optional grouping column(s) (site, individual, year), optional effort column (offset) and, for binomial counts, a trials column
+- **Engine:** glmmTMB (REML for models with random intercepts, ML otherwise; Laplace approximation); stats::glm / MASS::glm.nb fallback for fixed-effects-only models
+
+### `causal`: Causal effects from observational data (DAG + g-computation)
+
+- **Use when:** The question is causal ("does canopy cover increase trout?", "what would happen to native plants if pastures were not grazed?") and the data are observational (field surveys, monitoring). The researcher can draw a DAG of how their variables cause each other. Also panels (sites measured repeatedly) with unmeasured site-level or year-level confounders, via fixed effects.
+- **Not for:** Pure prediction or description (use glm); experiments with randomised treatment (use glm; no adjustment needed); hypotheses about a whole network of paths with latent constructs (use sem); imperfect detection of the outcome (occupancy/N-mixture modules; their covariates can be chosen with this module's DAG); feedback over time (past outcome -> future exposure), mediation with exposure-mediator interaction, or effects identified only by the front-door criterion or instruments (not implemented).
+- **Data:** one CSV, one row per site (or per site x time for panels); a column for the exposure, the outcome and each measured variable in the DAG; a DAG written in dagitty syntax in the config
+- **Engine:** dagitty (identification, local tests) + stats::glm / MASS::glm.nb (outcome model) + marginaleffects (g-computation) + sandwich (cluster-robust SE)
+
+### `sem`: Structural equation models (piecewise SEM and lavaan)
+
+- **Use when:** Several measured variables on the same sampling units (plots, sites, lakes, animals) are thought to influence each other as a network (e.g. fire -> canopy -> shrubs -> birds), and the question is which links the data support, how strong each direct path is, and how much of a driver's association with an outcome runs indirectly through mediators. Piecewise engine for count / binary / Gaussian responses and random site intercepts; lavaan engine for latent variables measured by several indicators, multigroup comparisons and correlated errors.
+- **Not for:** A single response with several predictors and no mediators (use glm); estimating one causal effect of an exposure with confounder adjustment (use causal); imperfect detection (occupancy / N-mixture modules; an SEM on raw counts treats detection as part of abundance); feedback loops (A -> B -> A) or time-series dynamics; interactions or nonlinear (spline) paths; very small samples (< ~30 units, or fewer than ~10 units per estimated coefficient in a component).
+- **Data:** one CSV, one row per sampling unit, with a numeric column for every variable in the diagram (counts as whole numbers, presence as 0/1), optional grouping column (site / burn unit) for random intercepts or for a multigroup comparison
+- **Engine:** piecewiseSEM 2.3 (component lm / glm / MASS::glm.nb / lme4 models + Shipley's d-separation test) or lavaan 0.7 (ML / MLR)
+
+## Occupancy
+
+### `occu-single`: Single-species occupancy (static single-season and dynamic multi-season)
+
+- **Use when:** Detection/non-detection surveys repeated at sites (camera traps, call surveys, eDNA replicates, point counts reduced to 0/1); question is where a species occurs and what is associated with occurrence, detection, colonisation or local extinction, accounting for imperfect detection. Static = one season; dynamic = several seasons/years at the same sites.
+- **Not for:** Counts or abundance (use an N-mixture module), several interacting species (occu-rota / occu-waddle), spatially autocorrelated occupancy (spOccupancy), false-positive detections, a single survey per site (detection cannot be separated from occupancy), designs with very low detection and few surveys (see Known limits in VALIDATION.md).
+- **Data:** detection history (long table site[, season], survey, detected 0/1; or wide site x survey), site covariates, optional survey covariates and site-by-season covariates
+- **Engine:** unmarked (occu, colext; maximum likelihood, default) or nimble (Bayesian, settings$engine = nimble)
+
+### `occu-rota`: Multispecies occupancy with species interactions (Rota et al. 2016)
+
+- **Use when:** Detection/non-detection surveys of 2 or 3 species at the same sites (camera traps, call surveys, eDNA, point counts reduced to 0/1), repeated so detection can be estimated; question is whether the species occur together more or less than expected under independence, how one species' occupancy differs where another is present vs absent, and whether that association changes along a habitat or disturbance gradient.
+- **Not for:** One species (use occu-single); more than 3 species or whole communities (joint species distribution models / community occupancy); asymmetric dominant-subordinate questions where one species' occupancy is assumed to depend on the other but not vice versa (occu-waddle); counts or abundance; single survey per site; multi-season co-occurrence dynamics; spatially autocorrelated occupancy; proving competition or predation (co-occurrence is not interaction).
+- **Data:** detection table (site x survey rows with one 0/1 column per species, or long site x survey x species), site covariate table, optional survey covariates (effort, days active, observer...)
+- **Engine:** unmarked::occuMulti (maximum likelihood, default) or nimble (Bayesian, categorical latent state; settings engine = nimble)
+
+### `occu-waddle`: Two-species conditional occupancy (dominant/subordinate; Richmond et al. 2010, Waddle et al. 2010)
+
+- **Use when:** Repeated detection/non-detection surveys of TWO species at the same sites, where one species can reasonably be treated as dominant (predator, invasive competitor, larger species) and the question is whether the other (subordinate) species occupies sites less (or more) often where the dominant is present, and whether detection of one depends on the other; covariates on every occupancy and detection probability.
+- **Not for:** Three or more species, or no defensible dominant/subordinate ordering (use occu-rota, which is symmetric); counts or abundance of the dominant (abund-interactions); single species (occu-single); multi-season colonisation/extinction dynamics.
+- **Data:** detection history of both species (site x survey 0/1, both recorded on every survey), site covariates, optional survey covariates
+- **Engine:** nimble (Bayesian, marginal likelihood; default) or hand-coded likelihood + optim (maximum likelihood)
+
+### `occu-spatial`: Spatial, multi-species and integrated occupancy (spOccupancy)
+
+- **Use when:** Detection/non-detection surveys repeated at sites with known coordinates, when (a) occupancy is likely spatially clustered beyond what the covariates explain (single species, spPGOcc), (b) several species were recorded at the same sites and community-level responses or species richness are wanted (msPGOcc, sfMsPGOcc), or (c) the same species was surveyed with two or more methods (point counts + ARUs, cameras + sign surveys) that should be analysed together (intPGOcc).
+- **Not for:** Single-species non-spatial analyses with likelihood output or dynamic (multi-season) occupancy (use occu-single); species interactions (occu-rota / occu-waddle); counts or abundance (N-mixture); estimating the spatial range itself precisely (weakly identified, see Known limits); presence-only data (sdm-presence-only); false-positive detections.
+- **Data:** long detection table (site, survey, detected 0/1 [, species] [, method/source] [, survey covariates]); site table with projected x/y coordinates (m or km) and site covariates; optional prediction grid (x, y, same covariates)
+- **Engine:** spOccupancy 0.8.2 (Polya-Gamma Gibbs samplers; NNGP spatial random effects)
+
+### `abund-interactions`: Abundance-mediated species interactions (dominant abundance -> subordinate occupancy)
+
+- **Use when:** Camera-trap (or other repeated detection/non-detection) surveys of two species where one (dominant, e.g. a predator or competitor) may affect where the other (subordinate) occurs, and the question is whether the subordinate's occupancy is associated with HOW MANY dominant individuals use a site, possibly differently in different habitats.
+- **Not for:** Interactions that act through presence/absence only and symmetric co-occurrence (use occu-rota or occu-waddle); fewer than ~300 sites (a habitat-dependent interaction passed the gate at 600 sites in the default design but its size was overstated by ~12% at 700 sites in an independent design; Twining et al. 2025 recommend ~1000 sites; see VALIDATION.md); very rarely detected dominant species (per-individual daily detection well below 0.03, untested); counts of individually identified animals (use scr); temporal avoidance at the scale of hours (activity-overlap analyses).
+- **Data:** camera deployments (site, start, end) + detection records (site, date, species), or a summarised site x occasion table of detection days and camera-days; site covariates (habitat), optional coordinates
+- **Engine:** nimble (joint Bayesian, default); ml (exact marginal likelihood, cross-check); twostep (unmarked occuRN + occu plug-in, comparison only)
+
+## Abundance
+
+### `nmixture`: N-mixture models for repeated counts (closed and open)
+
+- **Use when:** The same sites (points, plots, transects, stream reaches) were counted two or more times within a period when the number of animals there did not change; the question is how many animals there are and what habitat or survey conditions are associated with abundance, allowing for animals that were present but not counted. With several seasons/years of such counts, the dynamic (Dail-Madsen) version estimates recruitment, apparent survival and the abundance trajectory.
+- **Not for:** Detection/non-detection only (use occu-single); individually identified animals (use scr, cjs or closed capture-recapture, which give far more reliable absolute abundance); single counts per site (no repeat visits, so detection cannot be separated from abundance; use a Poisson/NB GLM (glm module) for a relative index); counts where animals move freely in and out between visits (closure fails); distance-sampling data (use distance).
+- **Data:** counts per site per visit (long CSV, one row per visit, or wide site x visit table), site covariates (one row per site), optional visit covariates (wind, date, observer, effort); for the dynamic model also a season/year column and optional site-by-season covariates
+- **Engine:** unmarked::pcount / pcountOpen (maximum likelihood, default); nimble + nimbleEcology (Bayesian, closed model only); hand-written likelihood (cross-check)
+
+### `distance`: Distance sampling (conventional, multiple-covariate and hierarchical)
+
+- **Use when:** Observers walked line transects or stood at points and recorded the distance (perpendicular for lines, radial for points) to every animal or group they detected, with detection falling off with distance; the question is how many animals there are per km2 and in the study area, and (optionally) whether density is associated with habitat measured per transect. Exact or binned distances, single or repeated visits, groups (clusters), strata.
+- **Not for:** Counts without distances (use nmixture), detection/non-detection (occu-single), individually identified animals (scr or capture-recapture), camera-trap distance sampling with snapshot moments (not implemented), surveys where animals on the line are missed (g(0) < 1, e.g. diving whales or cryptic birds: needs double-observer mrds, not implemented), spatial density surface models over a full study area (DSM; only covariate-based prediction to a grid is offered).
+- **Data:** observations CSV (transect id, distance, optional group size, optional visit, optional observer/weather), transects CSV (id, line length or number of visits, stratum, habitat covariates; every surveyed transect, including those with no detections), study-area size (km2, per stratum) for abundance, optional prediction grid
+- **Engine:** Distance::ds (CDS/MCDS, design-based density); unmarked::distsamp / gdistsamp (hierarchical, covariates on density, availability); hand-written likelihoods (cross-check)
+
+## Spatial capture-recapture
+
+### `scr`: Spatial capture-recapture (closed population density)
+
+- **Use when:** Individually identified animals detected at fixed detectors over repeated occasions within one closed season (camera traps of marked/spotted species, DNA from hair snares, scat stations or rub objects, live traps); question is population density (per km2), abundance, ranging scale, sex ratio or sex differences in ranging, or whether density is associated with habitat covariates. Handles 0/1 detections (binomial or per-occasion Bernoulli) and counts of genetic samples (Poisson), uneven detector effort, habitat masks from a raster, polygon or grid, detector / occasion / sex covariates on detection and a trap-specific behavioural response.
+- **Not for:** Unmarked animals (use nmixture / occupancy / distance sampling), partially marked populations (scr-smr), open populations across seasons or years with survival and recruitment (scr-open / jolly-seber), samples found along search tracks rather than at fixed detectors (scr-search), telemetry-only data (movement modules), genotypes with unresolved identity errors (fix them in the lab first; see NGS section).
+- **Data:** detector CSV (id, x, y [, detector covariates]); detection or genetic-sample CSV (individual, occasion, detector [, sex, QC status]); optional effort table (detector x occasion), occasion covariate table, individual sex table, habitat grid CSV / GeoTIFF raster / polygon (shapefile, GeoPackage)
+- **Engine:** nimble (Bayesian marginal likelihood, all variants [default]; latent data augmentation for the basic binomial model), numpyro (Bayesian NUTS, CPU/GPU; binomial/Poisson with mask, density and detector covariates), secr (maximum likelihood; independent cross-check of every variant)
+
+### `scr-smr`: Spatial mark-resight (SMR) and generalized spatial mark-resight (gSMR)
+
+- **Use when:** Only part of the population carries individual marks (collars, ear tags, natural marks on a subset) and cameras (or other resighting detectors) photograph both marked and unmarked animals; question is density (per km2), abundance, the marked fraction, ranging scale (sigma) or habitat effects on density. Use gsmr when the animals were marked at their own traps during the study (live-trapping, darting at bait sites), so marked animals are concentrated near the marking sites; use smr when the marked animals are a random sample of the population (e.g. collared earlier across the whole area). Optional telemetry (GPS/VHF fixes) of marked animals.
+- **Not for:** Every animal individually identifiable (use scr), no marked animals at all (unmarked SCR / spatial count models; density is weakly identified), open populations across seasons (scr-open), mark loss or marks that change between sessions, animals that cannot be told marked vs unmarked on a photo at all.
+- **Data:** camera CSV (id, x, y [, usage per occasion, camera covariates]); sightings CSV (camera, occasion, status marked / unmarked / marked-unidentified, animal ID for identified marks); either a list of marked animals (SMR) or the marking traps + marking captures (gSMR); optional telemetry CSV (animal ID, x, y); optional habitat grid CSV or raster with density covariates
+- **Engine:** nimble (Bayesian data augmentation with latent activity centres; default) and secr (maximum pseudo-likelihood mark-resight; independent cross-check)
+
+### `scr-search`: Search-encounter SCR (scat-detection dogs, snow-tracking, transect searches for genetic samples)
+
+- **Use when:** Individuals identified from noninvasive genetic samples (scats, hair, feathers, urine in snow) found along recorded search routes (GPS tracks of detection-dog teams, snow-tracking, walked transects) rather than at fixed traps; question is density / abundance, how density relates to habitat, and how search conditions affect detection, with uneven search effort.
+- **Not for:** Fixed traps, cameras or hair snares (use scr); unidentified detections (use occupancy or distance sampling); open populations across years (use scr-open); searches without GPS/effort records (effort cannot be reconstructed, results will be biased where searching was concentrated).
+- **Data:** GPS track log of every search (track_id, x, y; projected metres) with an occasion per track, genotyped sample table (individual ID + coordinates, ideally track ID), habitat grid with density covariates (optional), track-level detection covariates (team, snow) (optional)
+- **Engine:** nimble (Bayesian marginal likelihood with local evaluation; default); secr (ML: tracks as transect detectors with exact locations, and the same cell model) as independent checks
+
+### `scr-open`: Open-population spatial capture-recapture (Jolly-Seber SCR)
+
+- **Use when:** Individually identified animals (hair-snare or scat DNA, camera traps of marked/spotted species, live traps) detected at fixed detectors over repeated occasions in each of several seasons or years (robust design); question is abundance/density in each year, trend, apparent survival, recruitment, or whether density is associated with habitat.
+- **Not for:** One closed season only (use scr); non-spatial capture histories without detector locations (use jolly-seber or cjs); survival of marked animals only, with no interest in abundance (cjs); animals whose ranges shift a lot between years (static activity centres assumed; see Pitfalls); unmarked animals (nmixture, occupancy, distance).
+- **Data:** detector CSV (id, x, y, optional per-year operation columns); detection CSV (individual, year/period, occasion within period, detector); optional habitat grid CSV with density covariates
+- **Engine:** nimble (Bayesian; marginal [default], hmm or latent data augmentation), numpyro (Bayesian NUTS, CPU/GPU); openCR (maximum likelihood) as an independent cross-check
+
+## Demography and population dynamics
+
+### `cjs`: Cormack-Jolly-Seber apparent survival
+
+- **Use when:** Individually marked animals (bands, PIT tags, photo-ID, genetic tags) recaptured or resighted on repeated occasions; the question is how many survive from one occasion to the next and whether survival differs by sex/age class or varies with individual traits, environmental conditions or time.
+- **Not for:** Abundance or recruitment (use jolly-seber / scr-open), unmarked counts (nmixture), dead recoveries (band-recovery models), movement between sites or states (multistate), known-fate telemetry (use a known-fate / survival-time model).
+- **Data:** capture history per individual (wide 0/1 history, long table of id x occasion, or long table of id x capture date), optional individual table (group, age at marking, covariates) and occasion table (environmental covariates)
+- **Engine:** marked (maximum likelihood, default) or nimble + nimbleEcology (Bayesian; marginal dCJS likelihood or latent alive-state formulation); R2ucare for goodness of fit
+
+### `multistate`: Multistate and multievent capture-recapture (Arnason-Schwarz / Pradel multievent)
+
+- **Use when:** Individually marked animals are caught or resighted on repeated occasions and each capture records a state (site or wetland, breeding vs non-breeding, infected vs uninfected, size class), possibly with some captures where the state could not be determined; the question is survival in each state, how often animals move or switch between states, and what is associated with those transitions.
+- **Not for:** Plain survival without states (use cjs); abundance or recruitment (jolly-seber, scr-open); states that can be misclassified as another state (only "state recorded correctly or coded unknown" is modelled); unobservable states (e.g. temporary emigration to an unsampled site, skipped breeders that cannot be seen); dead recoveries; individual random effects; memory (second-order) transitions; animals with continuous position (use scr / movement-hmm).
+- **Data:** capture records with animal id, occasion and recorded state (long CSV, wide table or capture-history strings; 0 = not seen, a state name, or an "unknown state" code), optional individual covariates (id + columns) and occasion covariates (occasion + columns)
+- **Engine:** nimble + nimbleEcology (dDHMMo, forward algorithm); option engine 'ml' = hand-written forward-algorithm likelihood maximised with optim (also used as a cross-check); marked (crm 'hmmMSCJS') used as an independent cross-check
+
+### `jolly-seber`: Jolly-Seber open-population capture-recapture (abundance, survival, recruitment)
+
+- **Use when:** Individually marked animals (tags, PIT tags, bands, photo-ID, genetic ID) captured on 3+ occasions (usually years or seasons) in an open population, where the question is how many animals were present at each occasion, how many entered (births plus immigrants), how many survived, and whether the population is growing or declining.
+- **Not for:** Survival only, conditioning on first capture (use cjs); a single closed season (closed capture-recapture or scr); density per km2 or spatial capture histories (scr / scr-open); unmarked counts (nmixture / timeseries); populations with strong temporary emigration (needs a robust design, not provided here).
+- **Data:** one row per capture (animal ID + occasion, optional sex/group), or one capture-history string per animal; optional occasion table with interval lengths and occasion covariates for capture probability (effort)
+- **Engine:** nimble (Bayesian data augmentation, restricted dynamic occupancy formulation; marginal forward-algorithm likelihood by default, latent z sampler as an option); marked (maximum-likelihood POPAN) as an independent cross-check
+
+### `ipm`: Integrated population model (counts + capture-recapture + productivity)
+
+- **Use when:** A local population studied for several years (>= 8, ideally 12+) with three kinds of data on the same population (annual counts of breeders, capture-recapture or resighting of individually marked young and adults, and brood/litter productivity), and the question is how population size changed, which vital rates drove the changes, how much immigration contributes, or how precise survival estimates can be made by combining the data.
+- **Not for:** Only counts (use timeseries), only capture-recapture (cjs / jolly-seber / multistate), only productivity (glm), projecting extinction risk (pva), populations with more than two age classes that differ strongly in vital rates (needs a custom stage structure), species where males and females must both be modelled, density dependence (not in this module).
+- **Data:** three CSV files (annual counts; capture histories in long, wide or m-array form with age at marking; productivity per brood or per year with optional mother age) plus an optional year-covariate table
+- **Engine:** nimble (MCMC); cross-checked against the same model in JAGS (book code) and marked (CJS maximum likelihood)
+
+### `timeseries`: Population time series - trends, density dependence and drivers of growth (state-space models)
+
+- **Use when:** One count or abundance index per year (aerial/ground counts, nest counts, redd counts, CPUE, BBS-style route totals) for one population or several sub-populations, 10+ years; the question is whether the population is increasing or declining and by how much per year, how large it really is once counting error is removed, whether growth is density dependent, whether a covariate (winter severity, harvest, drought) is associated with good and bad years, and how many years of monitoring are needed to detect a decline.
+- **Not for:** Repeated counts within a season at many sites (use nmixture, which estimates detection); marked animals (cjs / jolly-seber / ipm give vital rates); detection/non-detection (occu-*); age- or stage-structured projections and extinction risk (pva); series shorter than ~8 years (no model can separate process from observation error).
+- **Data:** CSV with one row per year (per site): year, count or index, optional site/herd column, optional yearly covariates; years not surveyed may be blank or absent
+- **Engine:** hand-written REML / Kalman-filter maximum likelihood (exponential, Gompertz, multi-site default); MARSS package (other multi-site structures); nimble MCMC (Bayesian with covariates and missing years); glmmTMB (log-linear trend with AR(1), comparison)
+
+### `pva`: Population viability analysis - count-based (diffusion / state-space) and matrix-model PVA
+
+- **Use when:** The question is extinction or quasi-extinction RISK - "how likely is this population to fall below N animals within 10, 25 or 50 years, and which vital rates or management actions change that?" Use the count model when you have one count or index per year (10+ years, ideally 20+). Use the matrix model when you have stage- or age-specific vital rates (survival, fecundity) with standard errors and year-to-year variation, e.g. from a CJS, IPM or nest-monitoring analysis, or raw annual monitoring counts of animals at risk and survivors / young produced.
+- **Not for:** Estimating trend, density dependence or covariate effects on growth from counts (use timeseries, which this module complements); estimating survival from capture histories (cjs / multistate / ipm first, then feed their estimates here); spatially explicit or metapopulation PVA (not supported); fewer than ~10 counts (risk is unestimable); populations with strong density dependence near carrying capacity in the count model (see Pitfalls).
+- **Data:** count model - CSV with one row per year (year, count; blank = not surveyed). matrix model - a matrix definition (stages, entries as formulas in named vital rates) in the config plus EITHER a vital-rate CSV (rate, type, mean, se, sd_env, n_years) OR an annual monitoring CSV (year, rate, n, events); initial abundance per stage; a quasi-extinction threshold.
+- **Engine:** hand-written R - Dennis et al. diffusion estimators and inverse-Gaussian first-passage risk with a discrete-census correction; Bayesian exponential-growth state-space (EGSS) model computed exactly on a grid over the REML likelihood (no MCMC); vectorised stochastic matrix projection with demographic and environmental stochasticity and parameter uncertainty. popbio, MARSS and a Nimble MCMC of the same state-space model used as independent cross-checks.
+
+## Distribution and community
+
+### `sdm-presence-only`: Species distribution from presence-only records (point process, Maxent, integrated with surveys)
+
+- **Use when:** You have presence-only records of a species (museum/herbarium specimens, iNaturalist/eBird-style incidental sightings, agency incidental reports, trapper/hunter reports) with coordinates, plus habitat covariates covering the study region (a raster stack or a regular covariate grid), and the question is which habitat the species is associated with and where in the region it is relatively most likely to occur. Optionally a sampling-bias covariate (distance to road/town/trail, access, observer density) and optionally a set of planned survey sites with detections AND non-detections (camera traps, plots, repeat visits).
+- **Not for:** Data with real absences at every site and no presence-only records (use occu-single or glm); counts at sites (nmixture/glm); telemetry locations of marked animals (movement-ssf, rsf); estimating prevalence, occupancy or abundance from presence-only records alone (impossible without survey data, see below); records with positional error much larger than the covariate grid cell; spatially clustered records with strong residual clustering (an LGCP / spatial random effect is not implemented here).
+- **Data:** presence CSV (x, y in a projected metric CRS, optional species column); covariate grid CSV (x, y, covariates on a regular grid) or GeoTIFF rasters; names of habitat covariates and (strongly recommended) sampling-bias covariates; optional survey CSV (site, x, y, visit, detected 0/1) with the area each survey covers
+- **Engine:** ppm = inhomogeneous Poisson point process by down-weighted Poisson regression (stats::glm.fit) on grid quadrature; integrated = joint maximum likelihood of the presence-only IPP and a cloglog occupancy model of survey data with detection probability (optim, BFGS with analytic gradient); maxnet = Maxent via glmnet with percentile-bootstrap intervals; survey_only = survey part alone (comparison)
+
+### `jsdm`: Joint species distribution model (HMSC)
+
+- **Use when:** Presence/absence or counts of many species (about 5-60) recorded at the same sampling units (plots, point-count stations, traps, lakes), when the question is how species respond to environmental covariates, whether species traits (and phylogeny/taxonomy) explain which species respond how, which species co-occur more or less often than the environment predicts (residual associations), how much of each species' variation is due to each covariate (variance partitioning), or how expected species richness changes along a gradient.
+- **Not for:** Imperfect detection that matters for the question (use occu-spatial msPGOcc / sfMsPGOcc, which separates occupancy from detection); one species (glm, occu-single); pairwise interaction hypotheses between two named species (occu-rota, occu-waddle, abund-interactions); ordination / dissimilarity questions (community); cover, biomass or proportion data; inferring biotic interactions from co-occurrence (not possible with any JSDM; see Pitfalls).
+- **Data:** community records (long: site, species, value; or wide: site x species), a sites table with covariates (optionally x/y coordinates), optional species traits table (and optional taxonomy columns or a Newick phylogeny)
+- **Engine:** Hmsc 3.x (Bayesian Gibbs MCMC; probit (validated) or lognormal Poisson (not validated: slow mixing); latent factors with multiplicative gamma process shrinkage); glmmTMB reduced-rank model used as an independent cross-check
+
+### `community`: Community composition - ordination, RDA and variation partitioning, PERMANOVA with dispersion test, beta-diversity partitioning, indicator species
+
+- **Use when:** A site x species table (counts, cover, biomass or presence/absence) from many sites plus a site table of environmental variables and/or groups (habitat types, treatments, regions, years); questions like "how much of the variation in species composition is related to elevation vs canopy cover?", "do burned and unburned plots hold different communities?", "is beta diversity driven by species replacement or species loss?", "which species characterise each habitat?", or "draw me an ordination".
+- **Not for:** Individual species' responses with uncertainty from imperfect detection (use occu-single / occu-spatial / nmixture, or a joint species distribution model, jsdm); species interactions (occu-rota, occu-waddle); fewer than about 10 sites or 3 species; time series of one community (timeseries); phylogenetic or functional beta diversity (betapart can do it, not wired here); causal claims about what drives composition (use causal / sem with stated assumptions).
+- **Data:** species CSV, wide (one row per site, one column per species) or long (site, species, count); site CSV with the same site ids, numeric environmental variables and an optional grouping column
+- **Engine:** hand-written RDA / variation partitioning (adjusted R2), PERMANOVA sums of squares and Baselga (2010) pairwise components with delete-one-site jackknife intervals (identical to vegan::varpart, RsquareAdj, adonis2 and betapart::beta.pair); vegan permutation tests, NMDS, DCA, CCA, db-RDA, envfit, betadisper; betapart (multi-site); indicspecies (IndVal.g)
+
+## Movement
+
+### `movement-hmm`: Hidden Markov models for animal movement (behavioural states)
+
+- **Use when:** GPS / Argos-quality-filtered telemetry with fixes at a (roughly) regular interval, and the question is which movement modes an animal switches between (e.g. encamped/foraging vs travelling), how much time it spends in each (activity budget), and how time of day or habitat at its location is associated with switching between modes.
+- **Not for:** Habitat selection / resource selection (use movement-ssf); home-range size (movement-ssf home ranges / ctmm); fixes so irregular or error-prone that a regular grid is meaningless (fit a continuous-time model first, e.g. crawl multiple imputation); accelerometer or dive data (possible with momentuHMM but not built in here); individual random effects on state switching; hidden semi-Markov (non-geometric dwell times).
+- **Data:** one CSV with one row per fix - animal id, timestamp, coordinates (lon/lat or projected x/y in metres) - plus optional covariate columns measured at each fix (e.g. % forest cover, distance to road)
+- **Engine:** momentuHMM (maximum likelihood via nlm, multiple random starts); moveHMM and a hand-written forward-algorithm likelihood used for cross-checks
+
+### `movement-ssf`: Habitat selection from telemetry - integrated step selection (iSSA), RSF and home ranges
+
+- **Use when:** GPS (or other regular-interval) telemetry from several animals plus habitat rasters; the question is which habitats animals select or avoid while moving, how strongly (relative selection strength), how much individuals differ, what their movement kernel looks like (step lengths, turning) and how large their home ranges are.
+- **Not for:** Behavioural states / switching between encamped and travelling (use movement-hmm); very irregular or sparse fixes (> ~12 h apart, VHF triangulation) where steps lose meaning (use an RSF/home-range analysis alone); presence-only or survey data without individual tracks (use sdm-presence-only); categorical land-cover rasters (convert to proportion-of-class rasters, e.g. % forest within 100 m, first); migration or dispersal tracks that are not range-resident (iSSA still works with home_attraction false and home_range false, but home ranges are meaningless).
+- **Data:** GPS fix CSV (animal id, timestamp, projected x/y in metres, failed fixes allowed as empty rows) and one GeoTIFF per continuous habitat covariate in the same projected CRS
+- **Engine:** amt (track regularisation, steps, available steps), glmmTMB (Poisson formulation of the mixed conditional logistic model, Muff et al. 2020), ctmm (AKDE), amt (KDE, MCP)
+
+## Conservation genetics
+
+### `popgen-structure`: Genetic diversity and population structure (FST, FIS, isolation by distance, DAPC)
+
+- **Use when:** Multilocus genotypes (microsatellites, or SNPs coded 0/1/2 or in a VCF) from individuals sampled in several populations or sites; questions about genetic diversity per population (Ho, He, allelic richness, private alleles), inbreeding / Hardy-Weinberg departures (FIS), how differentiated populations are (global and pairwise FST), whether differentiation grows with distance (isolation by distance), and how many genetic clusters there are (PCA, DAPC). Connectivity and genetic-rescue questions in conservation.
+- **Not for:** Effective population size or relatedness/kinship (use popgen-ne); assigning individuals to known source populations for forensics; landscape-resistance models (circuitscape/ResistanceGA); haploid, polyploid or dominant markers (AFLP); selection scans / outlier loci; datasets with one population (no structure to estimate) or fewer than about 3 typed individuals per population.
+- **Data:** genotype table (one row per individual with population and loci as 'a/b', two columns per locus, or SNPs 0/1/2) or a VCF plus a sample sheet; optional site coordinates (latitude/longitude or km) for isolation by distance and maps
+- **Engine:** hand-written Weir & Cockerham (1984) / Nei (1987) estimators (agree with hierfstat to 1e-11), delete-one-locus jackknife + shared-individual covariance (delete-one-individual jackknife) intervals; adegenet/ade4 (PCA, DAPC), vegan (Mantel), poppr (AMOVA, optional)
+
+### `popgen-ne`: Effective population size and relatedness
+
+- **Use when:** Genotypes (microsatellites or SNPs) from one or more samples of a population; question is how large the genetically effective population is (Ne), how fast it is losing diversity, whether Ne is above conservation thresholds (50/100, 500/1000), and which sampled individuals are close relatives (full sibs, half sibs, parent-offspring).
+- **Not for:** Population structure, FST, isolation by distance, assignment (use popgen-structure); demographic history over many generations (coalescent methods such as GONE/SNeP); census abundance (use capture-recapture or close-kin mark-recapture models); pedigree reconstruction with parentage likelihoods (COLONY, sequoia).
+- **Data:** one row per individual with population, optional sampling time and optional flag to exclude juveniles/siblings from Ne; diploid genotypes as two allele columns per locus, "152/160" single columns, SNP 0/1/2 dosages, GENEPOP or VCF; optional list of known relative pairs; optional census size and generation time for the temporal method
+- **Engine:** R implementation of the NeEstimator v2 formulas (LDNe with jackknife CIs; temporal Jorde-Ryman, Nei-Tajima, Pollak), Queller-Goodnight and Lynch-Ritland moment estimators; cross-checked against the NeEstimator C program
+
+## Fisheries
+
+### `fisheries-growth`: Fish growth (von Bertalanffy) and length-weight condition
+
+- **Use when:** Individual age-length data (otolith/scale ages) for one or more groups (populations, lakes, sexes, years); question is how fast fish grow, how large they get, at what age they approach maximum size, whether growth or condition differs among groups, or whether growth varies with a group-level covariate (temperature, density, year). Optional weights give the length-weight relationship and condition (Wr or Kn).
+- **Not for:** Length-frequency data without ages (needs ELEFAN/mixture methods), tag-recapture growth increments (Fabens model), back-calculated lengths from annuli (repeated measures per fish), stock assessment / mortality (use fisheries-stock), growth models other than von Bertalanffy (Gompertz, logistic, Richards are not implemented).
+- **Data:** one row per fish with age (years), length, group (optional), weight (optional); optional group-covariate table (one row per group)
+- **Engine:** stats::nls with FSA starting values + Kimura (1980) likelihood-ratio tests (default), or nimble (Bayesian, fixed or hierarchical random group effects, covariates on log Linf and log K); stats::lm for length-weight
+
+### `fisheries-stock`: Fish stock assessment - catch curves, stock-recruitment and surplus production
+
+- **Use when:** Fisheries questions about mortality, recruitment or stock status. (1) catch_curve - aged fish from a survey or fishery sample; question is total mortality Z / annual survival of fully recruited fish. (2) stock_recruit - a brood table of spawners and the recruits they produced; question is productivity, density dependence, S_MSY, U_MSY, steepness. (3) surplus_production - an annual catch series plus an abundance index (CPUE or survey); question is MSY, B/B_MSY, F/F_MSY (Kobe status).
+- **Not for:** Length-only data (convert to age with an age-length key first, or use a length-based method), separating fishing from natural mortality (needs an M estimate or tagging), growth curves (use fisheries-growth), age-structured assessment (stock synthesis, SAM), catch-only methods without an index, stocks whose index is not proportional to biomass (hyperstability), recruitment series with errors-in-spawners problems, one-way-trip catch/CPUE histories for production models (weakly identified, see Known limits).
+- **Data:** catch_curve - one row per aged fish (age) or a catch-at-age table (age, count). stock_recruit - brood year, spawners, recruits. surplus_production - year, catch (every year), abundance index (may have gaps).
+- **Engine:** catch_curve - FSA::catchCurve (weighted regression) + Chapman-Robson (hand code, checked against FSA) + glmmTMB Poisson-lognormal GLMM; stock_recruit - least squares (lm / optim) or nimble (Bayesian, AR(1) residuals); surplus_production - nimble (Bayesian state-space, Meyer & Millar 1999)

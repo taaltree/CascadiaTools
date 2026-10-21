@@ -1,0 +1,9 @@
+# GLMM component: 120 plots in 12 sites, random site intercept on the count model.
+params: {re_sd_birds: 0.4, int_birds: 1.2}
+design:
+  n_units: 120
+  n_groups: 12
+  model:
+    - {formula: "canopy ~ fire", family: gaussian}
+    - {formula: "shrub ~ canopy + moisture", family: gaussian}
+    - {formula: "birds ~ shrub + fire + (1|site)", family: poisson}

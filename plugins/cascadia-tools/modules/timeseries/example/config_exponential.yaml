@@ -1,0 +1,8 @@
+# Example: the single-herd series fitted with the classic exponential-growth
+# state-space model (EGSS; Dennis et al. 2006, Humbert et al. 2009), no covariates.
+data:
+  file: herd_counts.csv
+  year: year
+  count: animals_counted
+settings:
+  model: exponential

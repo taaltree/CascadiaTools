@@ -1,0 +1,18 @@
+# Count-based PVA: Yellowstone grizzly bears, estimated number of adult females 1959-1997
+# (Morris & Doak 2002, Table 3.1; data from Eberhardt et al. 1986 and Haroldson 1999).
+# Question: how likely is the population to fall to 20 adult females within 10, 25 or 50 years?
+settings:
+  model: count
+  method: diffusion            # diffusion (Dennis et al. 1991; counts treated as exact) | state_space (separates counting error)
+  correction: discrete         # discrete (annual censuses, default) | none (classic continuous-time formula)
+  threshold: 20                # quasi-extinction threshold, same units as the counts
+  horizons: [10, 25, 50]       # years ahead at which risk is reported
+  nboot: 4000                  # parametric-bootstrap replicates for the risk intervals
+data:
+  file: yellowstone_grizzly_females.csv
+  year_col: year
+  count_col: adult_females
+  species: Yellowstone grizzly bears
+  units: adult females
+figures:
+  journal: esa

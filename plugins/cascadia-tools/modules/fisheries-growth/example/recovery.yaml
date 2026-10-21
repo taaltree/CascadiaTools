@@ -1,0 +1,30 @@
+# Planted-truth recovery at the design of the SIMULATED worked example
+# (sim_walleye_2014.csv). Group A = female (reference), B = male.
+# Run: scripts/ejob -c 16 -m 32 -t 3:00:00 -l logs/fisheries-growth_si_recover.log -- \
+#   scripts/Rscript core/run.R recover fisheries-growth \
+#   --config modules/fisheries-growth/example/recovery.yaml --nsim 200 --cores 16 \
+#   --out results/fisheries-growth/si/recovery
+params:
+  Linf: [680, 560]
+  K: [0.31, 0.39]
+  t0: [-1.0, -1.1]
+  sigma: 0.05
+  error: multiplicative
+  lw_a: 1.2e-6
+  lw_b: 3.34
+  lw_sigma: 0.09
+  condition: [1, 1.02]
+design:
+  n_groups: 2
+  n_per_group: [530, 470]
+  Z: 0.55
+  age_min: 1
+  max_age: 16
+  age_offset: 0.5
+  prop_weighed: 1
+  reference_length: 500
+  min_length: 0
+  hierarchical: false
+settings:
+  engine: nls
+  error: multiplicative

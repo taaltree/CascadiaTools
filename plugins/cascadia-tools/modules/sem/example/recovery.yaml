@@ -1,0 +1,46 @@
+# Planted-truth recovery at the design of the burned-forest example (example/config.yaml).
+# Truth = the generating values in dev/sem/make_example.R (set.seed(2024)), on the raw (CSV) units
+# the fit reports. Same diagram, families and random intercept as the real fit:
+#   120 plots in 12 burn units (10 per unit), Gaussian canopy and shrub cover, Poisson bird counts
+#   with a random burn-unit intercept (SD 0.25).
+# Differences from make_example.R (documented in example/README_data.md):
+#   - make_example.R draws dNBR around a burn-unit mean (unit means U(150, 750), within-unit SD 150);
+#     the simulator draws dNBR as N(450, 229), the same overall mean and SD, independent of burn unit.
+#   - make_example.R rounds to 0.1 % and truncates cover to 0-100 %; no value in the example data
+#     was truncated, so this does not change the truth.
+# Truth for standardised coefficients and effects is computed by the module from a 200,000-row
+# simulation of this design.
+#   scripts/ejob -c 16 -m 32 -t 3:00:00 -l logs/sem_si_recover.log -- scripts/Rscript core/run.R recover sem \
+#     --config modules/sem/example/recovery.yaml --nsim 200 --cores 16 --out results/sem/si/recovery
+design:
+  n_units: 120
+  n_groups: 12
+  engine: piecewise
+  model:
+    - {formula: "canopy_cover_pct ~ fire_severity_dnbr", family: gaussian}
+    - {formula: "shrub_cover_pct ~ canopy_cover_pct + soil_moisture_pct", family: gaussian}
+    - {formula: "bird_detections ~ shrub_cover_pct + fire_severity_dnbr + (1|burn_unit)", family: poisson}
+  effects:
+    - {from: fire_severity_dnbr, to: bird_detections}
+    - {from: soil_moisture_pct, to: bird_detections}
+    - {from: fire_severity_dnbr, to: shrub_cover_pct}
+params:
+  # exogenous drivers
+  mean_fire_severity_dnbr: 450
+  sd_fire_severity_dnbr: 229
+  mean_soil_moisture_pct: 22
+  sd_soil_moisture_pct: 5
+  # canopy cover (%) = 78 - 0.055 x dNBR + N(0, 9)
+  int_canopy_cover_pct: 78
+  fire_severity_dnbr_to_canopy_cover_pct: -0.055
+  sd_canopy_cover_pct: 9
+  # shrub cover (%) = 45 - 0.35 x canopy + 0.6 x moisture + N(0, 7)
+  int_shrub_cover_pct: 45
+  canopy_cover_pct_to_shrub_cover_pct: -0.35
+  soil_moisture_pct_to_shrub_cover_pct: 0.6
+  sd_shrub_cover_pct: 7
+  # bird detections ~ Poisson(exp(1.0 + 0.025 x shrub - 0.0006 x dNBR + u_unit)), u ~ N(0, 0.25)
+  int_bird_detections: 1.0
+  shrub_cover_pct_to_bird_detections: 0.025
+  fire_severity_dnbr_to_bird_detections: -0.0006
+  re_sd_bird_detections: 0.25

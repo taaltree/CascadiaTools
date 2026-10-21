@@ -1,0 +1,5 @@
+numpyro
+jax
+numpy
+scipy
+pandas

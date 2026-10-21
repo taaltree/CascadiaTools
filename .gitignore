@@ -1,0 +1,14 @@
+# analysis outputs and local data (keep raw data out of version control)
+results/
+projects/
+data_raw/
+*.rds
+*.log
+.Rhistory
+.RData
+__pycache__/
+.DS_Store
+*.o
+*.so
+*.dll
+*.dylib

@@ -1,0 +1,36 @@
+# Song sparrow constant-effort banding station, 2016-2024 (adults only; mist nets run May-August).
+# Question: what is annual apparent survival of adult song sparrows, does it differ between sexes,
+# and is it associated with winter cold and body mass? Many birds caught once are transients
+# (passing migrants / floaters), so survival is modelled with a time-since-marking (tsm) effect.
+# (The data are simulated with known truth so the fit can be checked: see TRUTH.txt.)
+data:
+  species: adult song sparrows
+  format: dates                 # one row per capture: band number + date (wide / long formats also supported)
+  captures: sosp_captures.csv
+  id_col: band_number
+  date_col: capture_date
+  date_format: "%Y-%m-%d"
+  occasion_unit: year           # all captures in a breeding season = one occasion
+  season_months: [5, 6, 7, 8]   # captures outside May-August are dropped
+  individuals: sosp_birds.csv   # one row per bird: sex, mass at first capture, ...
+  group_col: sex
+  group_levels: [F, M]          # first level = reference
+  individual_covs: [mass_g]
+  occasion_covs: sosp_years.csv # one row per year; the value in year t applies to the winter after season t (survival t -> t+1)
+  occasion_cov_col: year
+  covariate_units:
+    mass_g: g
+    winter_min_temp_c: "deg C"
+formulas:
+  phi: "~ tsm + sex + winter_min_temp_c + mass_g"   # apparent survival (logit link)
+  p: "~ sex"                                        # recapture probability (logit link)
+settings:
+  engine: marked                # or nimble (Bayesian); nimble also supports '(1 | time)' random year effects
+  gof: true
+figures:
+  labels:
+    mass_g: "Body mass (g)"
+    winter_min_temp_c: "Mean January minimum temperature (°C)"
+    F: "Female"
+    M: "Male"
+    sex: "Sex"

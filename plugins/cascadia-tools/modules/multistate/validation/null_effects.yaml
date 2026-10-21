@@ -1,0 +1,6 @@
+# False-positive control: every covariate effect is zero.
+params:
+  survival_beta_size: 0
+  transition_beta_temp_A_to_B: 0
+  transition_beta_temp_B_to_A: 0
+  detection_beta_effort: 0

@@ -1,0 +1,20 @@
+# Planted-truth recovery at the design of the Hermit warbler example (example/config.yaml).
+# Truth = the generating values of dev/nmixture/make_example.R (seed 20250512), converted to the module's
+# reporting scale by dev/nmixture/si_truth.R (results/nmixture/si/truth.csv).
+# The module simulator has one standardised site covariate ("forest") and one standardised visit covariate
+# ("wind"); here they stand in for canopy cover and wind. Elevation, day of year and observer (in the real
+# fit) are not simulated; their effects are smaller and the fit's handling of them is checked against the
+# known truth in the example fit itself.
+#   scripts/ejob -c 16 -m 32 -t 3:00:00 -l logs/nmixture_si_recover.log -- scripts/Rscript core/run.R recover nmixture \
+#     --config modules/nmixture/example/recovery.yaml --nsim 200 --cores 16 --out results/nmixture/si/recovery
+design:
+  model: static
+  n_sites: 120            # 120 survey points
+  n_visits: 3             # up to 3 visits per point
+  prop_missing: 0.039     # 14 of 360 visits not done (3.9%)
+  abundance_dist: P       # Poisson abundance, as fitted (mixture: P)
+params:
+  abundance_at_average_site: 2.102   # warblers per point at mean canopy (60.0%) and mean elevation (599 m)
+  detection_prob: 0.553              # per bird per visit, observer JDK, mean wind (1.4) and day (146)
+  lambda_beta_forest: 0.434          # canopy: 0.022 per % x SD 19.74 % (rate ratio 1.54 per SD)
+  p_beta_wind: -0.496                # wind: -0.45 per Beaufort x SD 1.10 (odds ratio 0.61 per SD)

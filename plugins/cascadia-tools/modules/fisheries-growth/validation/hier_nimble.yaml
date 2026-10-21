@@ -1,0 +1,3 @@
+# Hierarchical: 10 groups (lakes/years) x 80 fish, group covariate on Linf and K
+design: {hierarchical: true, n_groups: 10, n_per_group: 80}
+settings: {engine: nimble, group_effects: random}

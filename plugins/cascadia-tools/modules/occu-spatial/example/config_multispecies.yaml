@@ -1,0 +1,24 @@
+# Mesocarnivore community at the same 160 camera stations (12 species, weekly occasions).
+# Question: how does the carnivore community respond to canopy cover, and where is
+# richness highest? sfMsPGOcc = spatial factor community model; msPGOcc = non-spatial.
+data:
+  detections: mesocarnivore_detections.csv   # station x week x species, detected 0/1
+  sites: camera_stations.csv
+  site_col: station
+  survey_col: week
+  species_col: species
+  detection_col: detected
+  x_col: utm_e
+  y_col: utm_n
+  coord_units: m
+  prediction: prediction_grid_1km.csv
+formulas:
+  psi: "~ canopy_cover_pct"
+  p: "~ days_active"
+settings:
+  model: sfMsPGOcc
+  n_factors: 1
+figures:
+  labels:
+    canopy_cover_pct: "Canopy cover (%)"
+    days_active: "Days camera active in the week"

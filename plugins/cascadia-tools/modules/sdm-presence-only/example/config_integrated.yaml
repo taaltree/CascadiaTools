@@ -1,0 +1,31 @@
+# Same marten records as config.yaml, plus 45 camera stations (4 two-week occasions each,
+# ~1 km2 effective sampling area per station) run in 2023. The survey's non-detections let
+# the model estimate absolute density, occupancy and detection, and anchor the habitat
+# effects against observer bias (Fithian et al. 2015; Koshkina et al. 2017).
+data:
+  presence: presence_records.csv
+  presence_x: easting
+  presence_y: northing
+  species_col: species
+  species: "Martes caurina"
+  covariate_grid: covariate_grid.csv
+  grid_x: easting
+  grid_y: northing
+  coord_unit: m
+  habitat_covariates: [forest_cover_pct, elevation_m]
+  bias_covariates: [dist_road_km]
+  survey: camera_survey.csv          # long format: one row per station x occasion actually run
+  survey_site_col: station
+  survey_x: easting
+  survey_y: northing
+  survey_visit_col: occasion
+  survey_detection_col: detected     # 1 = marten photographed, 0 = not
+  survey_area_km2: 1                 # area each station samples (km2)
+  labels:
+    forest_cover_pct: "Forest cover (%)"
+    elevation_m: "Elevation (m)"
+    dist_road_km: "Distance to road (km)"
+settings:
+  engine: integrated
+  cv_block_size: 12000
+  compare_engines: [ppm, maxnet]

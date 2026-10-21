@@ -1,0 +1,2 @@
+# Negative control: one panmictic population split into 9 sampling sites -> FST = 0, slope = 0
+design: {model: panmixia}

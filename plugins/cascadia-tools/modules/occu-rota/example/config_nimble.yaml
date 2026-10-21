@@ -1,0 +1,27 @@
+# Bayesian (Nimble) fit of the 2-species example; same data and formulas as config.yaml.
+data:
+  detections: camera_detections.csv
+  format: wide_species
+  site_col: camera_id
+  survey_col: week
+  species_cols: [coyote, gray_fox]
+  surveyed_col: days_active
+  obs_covs: [days_active]
+  site_covs: camera_sites.csv
+  max_order: 2
+formulas:
+  occupancy: "~ forest_pct + log(housing_per_km2)"
+  interaction: "~ log(housing_per_km2)"
+  detection: "~ days_active + on_trail"
+settings:
+  engine: nimble
+  gof_ndraws: 300
+figures:                      # optional: publication labels (see skills/eco-figures)
+  labels:
+    coyote: "Coyote"
+    gray_fox: "Gray fox"
+    bobcat: "Bobcat"
+    forest_pct: "Forest cover within 500 m (%)"
+    housing_per_km2: "Housing density (units per km²)"
+    days_active: "Camera-days active in the week"
+    on_trail: "Camera on trail"

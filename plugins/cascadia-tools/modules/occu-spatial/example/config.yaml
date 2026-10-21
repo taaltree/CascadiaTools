@@ -1,0 +1,34 @@
+# Fisher (Pekania pennanti) camera-trap survey, western Cascades, summer 2024.
+# 160 camera stations (>= 1 km apart) in a 30 x 30 km block, up to 6 weekly occasions
+# (some cameras failed early). Question: is fisher occupancy associated with canopy
+# cover and elevation, allowing for imperfect detection and residual spatial clustering?
+data:
+  detections: fisher_detections.csv   # one row per station x week that the camera was working
+  sites: camera_stations.csv          # one row per station: coordinates + habitat covariates
+  site_col: station
+  survey_col: week
+  detection_col: detected             # 1 = fisher photographed that week, 0 = not
+  x_col: utm_e                        # projected coordinates (UTM, metres)
+  y_col: utm_n
+  coord_units: m                      # m or km; spatial range is reported in km
+  prediction: prediction_grid_1km.csv # optional: 1-km grid with the same covariates -> maps
+formulas:
+  psi: "~ canopy_cover_pct + elevation_m"   # occupancy
+  p: "~ days_active"                        # detection per weekly occasion
+settings:
+  model: spPGOcc        # spatial single-species; PGOcc = non-spatial
+figures:                # publication figures (docs/FIGURES.md, skills/eco-figures)
+  journal: esa          # sets column widths and font size
+  width: single
+  formats: [pdf, png]
+  ci: 0.95              # outer credible band
+  inner_ci: 0.5         # inner credible band
+  show_data: true       # rug of surveyed sites / surveys
+  legend: right
+  # include: [occupancy_map, spatial_effect_map, effect_canopy_cover_pct, effect_elevation_m, range]
+  per_figure:
+    occupancy_map: {width: double}   # two map panels + two colour bars need the full page width
+  labels:
+    canopy_cover_pct: "Canopy cover (%)"
+    elevation_m: "Elevation (m)"
+    days_active: "Days camera active in the week"

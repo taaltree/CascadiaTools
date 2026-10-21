@@ -1,0 +1,9 @@
+# Example: conventional log-linear trend with AR(1) residuals across four herds (comparison only).
+data:
+  file: herds_multi.csv
+  year: year
+  count: count
+  site: herd
+settings:
+  model: loglinear
+  family: nbinom2

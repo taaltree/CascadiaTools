@@ -1,0 +1,45 @@
+# Wood Thrush point counts: does abundance change with canopy cover, elevation and forest type?
+# 45 stations surveyed 4 times; survey length (5 or 10 min) differs, so it is an offset.
+data:
+  file: wood_thrush_counts.csv
+  formula: wood_thrush ~ canopy_cover_pct + elevation_m + forest_type + (1|station)
+  family: nbinom2              # counts with more spread than Poisson
+  offset: survey_min           # effort; the model is for counts per unit of survey time
+  offset_per: 10               # report expected counts per 10-minute survey
+  scale: all                   # standardise continuous predictors (effects per 1 SD)
+  units:                       # also report effects per a biologically meaningful change
+    canopy_cover_pct: 10
+    elevation_m: 100
+  unit_text:
+    canopy_cover_pct: percentage points
+    elevation_m: m
+  labels:
+    canopy_cover_pct: canopy cover (%)
+    elevation_m: elevation (m)
+    forest_type: forest type
+    survey_min: survey minutes
+  reference:
+    forest_type: deciduous     # contrasts are against deciduous stands
+  response_label: Wood Thrush count
+settings:
+  diagnostics: true
+figures:                       # publication figures (docs/FIGURES.md); redraw without refitting:
+                               #   scripts/Rscript core/run.R figures glm --fit <out>/glm_fit.rds --config <this file>
+  journal: esa                 # generic | esa | besjournals | wiley_jwm | cjfas | plos | nature | slide
+  width: single                # single | onehalf | double | mm
+  formats: [pdf, png]
+  dpi: 600
+  ci: 0.95                     # level of bands and intervals
+  show_data: true              # rug of observed predictor values (+ raw points for proportions / continuous responses)
+  legend: right
+  greyscale: false
+  labels:                      # rename anything shown in the figures (keys: column names, factor levels, ids below)
+    canopy_cover_pct: Canopy cover (%)
+    elevation_m: Elevation (m)
+    forest_type: Forest type
+    station: Station
+    # response: "Wood Thrush count\nper 10-min survey"   # y axis of the effect plots
+    conifer: coniferous          # a factor level (or forest_type_conifer)
+  # include: [effect_canopy_cover_pct, coefficients]
+  # per_figure:
+  #   coefficients: {width: onehalf}

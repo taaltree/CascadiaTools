@@ -1,0 +1,2 @@
+# CI method comparison: delta method conditional on sampled sites (marginaleffects default).
+settings: {whatif: false, ci_method: delta}

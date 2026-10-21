@@ -1,0 +1,41 @@
+# Piecewise SEM: how does fire severity affect breeding-bird detections,
+# directly and through post-fire changes in canopy and shrub cover?
+data:
+  file: burned_forest_plots.csv          # one row per plot
+engine: piecewise
+model:                                    # one component model per response
+  - formula: canopy_cover_pct ~ fire_severity_dnbr
+    family: gaussian
+  - formula: shrub_cover_pct ~ canopy_cover_pct + soil_moisture_pct
+    family: gaussian
+  - formula: bird_detections ~ shrub_cover_pct + fire_severity_dnbr + (1|burn_unit)
+    family: poisson                       # counts; random intercept for burn unit
+effects:                                  # indirect + total effects to report
+  - {from: fire_severity_dnbr, to: bird_detections}
+  - {from: soil_moisture_pct, to: bird_detections}
+  - {from: fire_severity_dnbr, to: shrub_cover_pct}
+units:                                    # biologically meaningful steps for the text
+  fire_severity_dnbr: 100
+  canopy_cover_pct: 10
+  shrub_cover_pct: 10
+  soil_moisture_pct: 5
+labels:
+  fire_severity_dnbr: Fire severity (dNBR)
+  canopy_cover_pct: Canopy cover (%)
+  shrub_cover_pct: Shrub cover (%)
+  soil_moisture_pct: Soil moisture (%)
+  bird_detections: Bird detections
+settings:
+  ci_method: montecarlo                   # or delta, bootstrap
+figures:                                  # publication figures (see README "Figures", skills/eco-figures)
+  journal: esa                            # sets widths and font size
+  formats: [pdf, png]
+  ci: 0.95
+  show_data: true                         # partial residuals on the partial_ plots
+  # greyscale: true                       # print-safe: shapes/linetypes also separate groups
+  # include: [path_diagram, indirect_effects, dsep, partial_shrub_cover_pct_to_bird_detections]
+  labels:                                 # rename anything without touching code
+    bird_detections: Birds per point count   # short: avoids 3-line wrapped labels
+    effect_total: Total
+  per_figure:
+    path_diagram: {width: double}

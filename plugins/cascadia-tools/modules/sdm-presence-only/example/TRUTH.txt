@@ -1,0 +1,9 @@
+Example data were simulated by dev/sdm-presence-only/make_example.R (seed 2025).
+True values (per 1 SD of each covariate over the grid):
+intensity_beta_forest_cover_pct = 0.9
+intensity_beta_elevation_m = 0.4
+bias_beta_dist_road_km = -1.1
+density_at_mean_covariates = 0.4
+expected_total_abundance = 2300
+mean_occupancy_prob = 0.3914
+detection_prob = 0.45

@@ -1,0 +1,8 @@
+# Binary MEDIATOR: shrub layer present/absent (logit) mediates fire/moisture -> birds; 150 plots.
+params: {int_shrub: 0, canopy_to_shrub: -0.8, moisture_to_shrub: 0.6, shrub_to_birds: 0.5}
+design:
+  n_units: 150
+  model:
+    - {formula: "canopy ~ fire", family: gaussian}
+    - {formula: "shrub ~ canopy + moisture", family: binomial}
+    - {formula: "birds ~ shrub + fire", family: poisson}

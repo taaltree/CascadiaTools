@@ -1,0 +1,55 @@
+Simulated from known truth (jolly-seber module simulate(), seed 2024). Sex coded F/M/U (U = unknown).
+params:
+  superpopulation_size: 260
+  entry_prob_first: 0.45
+  survival: 0.82
+  survival_beta_male: -0.4
+  prop_male: 0.45
+  detection: 0.4
+  detection_beta_effort: 0.45
+realised truth:
+  superpopulation_size = 260
+  abundance_1 = 97
+  abundance_2 = 100
+  abundance_3 = 101
+  abundance_4 = 109
+  abundance_5 = 102
+  abundance_6 = 107
+  abundance_7 = 105
+  abundance_8 = 107
+  entrants_2 = 23
+  entrants_3 = 16
+  entrants_4 = 31
+  entrants_5 = 17
+  entrants_6 = 28
+  entrants_7 = 21
+  entrants_8 = 27
+  entry_prob_1 = 0.45
+  entry_prob_2 = 0.07857
+  entry_prob_3 = 0.07857
+  entry_prob_4 = 0.07857
+  entry_prob_5 = 0.07857
+  entry_prob_6 = 0.07857
+  entry_prob_7 = 0.07857
+  entry_prob_8 = 0.07857
+  recruitment_rate_1 = 0.2371
+  recruitment_rate_2 = 0.16
+  recruitment_rate_3 = 0.3069
+  recruitment_rate_4 = 0.156
+  recruitment_rate_5 = 0.2745
+  recruitment_rate_6 = 0.1963
+  recruitment_rate_7 = 0.2571
+  growth_rate_1 = 1.031
+  growth_rate_2 = 1.01
+  growth_rate_3 = 1.079
+  growth_rate_4 = 0.9358
+  growth_rate_5 = 1.049
+  growth_rate_6 = 0.9813
+  growth_rate_7 = 1.019
+  growth_rate_mean = 1.014
+  survival = 0.82
+  survival_beta_male = -0.4
+  prop_male = 0.45
+  survival_male = 0.7533
+  detection = 0.4
+  detection_beta_effort = 0.45

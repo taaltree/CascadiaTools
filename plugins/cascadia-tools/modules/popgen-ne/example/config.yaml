@@ -1,0 +1,36 @@
+# Example: bull trout (Salvelinus confluentus), Upper Elk Creek, sampled in
+# 2014 and 2024 at 16 microsatellites. SIMULATED data in the usual two-column
+# (GenAlEx / CERVUS) layout. Juveniles from six redds are nest-mates (known
+# full sibs): they are used for relatedness but excluded from Ne.
+data:
+  genotypes: bulltrout_microsats.csv
+  format: two_column          # two_column | one_column | dosage | genepop | vcf
+  id_column: sample_id
+  pop_column: site
+  time_column: year            # sampling year (or generation number)
+  use_for_ne_column: use_for_ne   # yes/no: exclude juveniles/siblings from Ne
+  first_locus_column: Sco102_a # first allele column (everything before it is metadata)
+  missing: [0]                 # code for a missing allele
+  generation_time: 5           # years per generation: 2014 -> 2024 = 2 generations
+  census_N: {UpperElkCreek: 120}   # adults at the first sampling (redd counts); enables sampling plan I
+  known_kin: known_relationships.csv
+  marker: msat
+  species: bull trout
+settings:
+  pcrit: auto                  # 0.02 when S > 25, otherwise drop singletons only (Waples & Do 2010)
+  jackknife: true
+  rel_primary: LR              # LR (Lynch-Ritland) or QG (Queller-Goodnight)
+  bottleneck: false            # true runs the heterozygosity-excess test (needs mutation-drift equilibrium; see README)
+figures:                       # publication figures (docs/FIGURES.md); redraw with core/run.R figures
+  journal: generic             # generic | esa | besjournals | wiley_jwm | cjfas | plos | nature | slide
+  formats: [pdf, png]
+  greyscale: false             # true: grey palette; methods/classes keep symbol and line-type encodings
+  # include: [ne_estimates, kin_resolution]
+  labels:                      # rename samples, methods, classes and axes
+    UpperElkCreek_2014: "Upper Elk Creek 2014"
+    UpperElkCreek_2024: "Upper Elk Creek 2024"
+    UpperElkCreek: "Upper Elk Creek"
+    # Ne: "Effective population size (log scale)"
+    # fullsib: "Full siblings"
+  # per_figure:
+  #   ne_estimates: {width: double}

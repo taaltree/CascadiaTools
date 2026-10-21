@@ -1,0 +1,3 @@
+# Large Ne relative to sample: Ne = 500, 50 individuals, 1000 SNPs.
+params: {Ne: 500}
+design: {n_ind: 50}

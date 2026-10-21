@@ -1,0 +1,3 @@
+# FALSE-POSITIVE RATE: canopy has no effect on trout (direct and via temperature both 0).
+params: {b_canopy__trout: 0, b_canopy__water_temp: 0}
+settings: {whatif: false}

@@ -1,0 +1,3 @@
+# Poisson GLMM with continuous x continuous and continuous x factor interactions
+params: {beta_forest_x_temp: 0.2, beta_temp_x_habitat_riparian: 0.3, beta_temp_x_habitat_wetland: 0}
+design: {family: poisson, interactions: ["forest:temp", "temp:habitat"]}

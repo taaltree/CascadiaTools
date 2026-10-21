@@ -1,0 +1,3 @@
+# Negative control: three groups with identical growth and condition
+params: {Linf: [600, 600, 600], K: [0.3, 0.3, 0.3], t0: -0.5, condition: [1, 1, 1]}
+settings: {engine: nls}

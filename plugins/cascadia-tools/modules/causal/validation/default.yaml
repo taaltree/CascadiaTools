@@ -1,0 +1,2 @@
+# Default design: stream DAG, negative binomial trout counts, 120 reaches (module defaults).
+settings: {whatif: false}

@@ -1,0 +1,42 @@
+# American black bear (Ursus americanus) hair-snare survey (noninvasive genetic
+# sampling): 48 baited barbed-wire hair snares ~2 km apart, checked every 7 days
+# for 6 sessions (June-July 2024). Hair samples were genotyped at 8 microsatellite
+# loci + amelogenin (sex); samples that failed laboratory QC have no bear ID.
+# Several samples of the same bear at the same snare in one session are common,
+# so the data are COUNTS of samples (Poisson observation model).
+# Questions: bear density; is density associated with forest cover and elevation;
+# do males range farther than females; are bears "trap-happy" at baited snares?
+data:
+  traps: hair_snares.csv           # one row per snare
+  trap_id_col: snare_id
+  x_col: utm_e                     # UTM 18N easting (m)
+  y_col: utm_n
+  units: m
+  detection_covariates: [lure]     # scent lure (1) or bait only (0): affects lambda0
+  effort: snare_effort.csv         # days each snare was active per session (wide: one column per session)
+  effort_scale: 7                  # effort = days active / 7 (a full session = 1; 0 = not operating)
+  samples: hair_samples.csv        # one row per hair sample sent to the lab
+  individual_col: bear_id
+  occasion_col: session
+  trap_col: snare_id
+  sex_col: sex                     # amelogenin call per sample (F/M; empty = no call)
+  qc_col: qc_status                # only samples with qc_status 'pass' are analysed
+  qc_pass: [pass]
+  obs_model: poisson               # counts of samples per bear x snare x session
+  behaviour: trap                  # trap-specific response (baited snares)
+  habitat_polygon: study_area.gpkg # suitable habitat (forest district, reservoir excluded)
+  raster: habitat.tif              # GeoTIFF with layers forest_pct, elevation_m
+  density_covariates: [forest_pct, elevation_m]
+  buffer: 12000                    # state space: 12 km (= 4 x expected male sigma ~3 km) around the snares
+  mask_spacing: 1000               # 1 km pixels (about sigma / 2)
+  labels:
+    forest_pct: "Forest cover (%)"
+    elevation_m: "Elevation (m)"
+    lure: "Scent lure at snare"
+settings:
+  engine: nimble
+  approach: marginal
+  niter: 30000                     # more parameters than the camera example: run longer
+  nburnin: 8000
+  compare_engines: [secr]          # independent maximum-likelihood fit of the same model
+  buffer_check: true               # refit with buffer + 2 sigma: density should not change

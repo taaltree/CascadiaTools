@@ -1,0 +1,34 @@
+# NEGATIVE CONTROL: unit fixed effects only, year shocks ignored.
+design:
+  dag: |
+    dag {
+      U [latent]
+      Year [latent]
+      U -> temperature
+      U -> snails
+      Year -> temperature
+      Year -> snails
+      upwelling -> temperature
+      upwelling -> snails
+      temperature -> snails
+    }
+  exposure: temperature
+  outcome: snails
+  family: poisson
+  n_units: 30
+  n_times: 6
+  unit_level: [U]
+  time_level: [Year]
+  unit_constant: [U]
+  time_constant: [Year]
+  panel: twoway
+params:
+  b_U__temperature: 0.7
+  b_U__snails: 0.6
+  b_Year__temperature: 0.4
+  b_Year__snails: -0.4
+  b_upwelling__temperature: -0.3
+  b_upwelling__snails: 0.3
+  b_temperature__snails: 0.25
+  intercept: 1.6
+settings: {whatif: false, force_panel: fixed}

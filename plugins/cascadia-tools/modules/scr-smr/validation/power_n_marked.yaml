@@ -1,0 +1,3 @@
+# Power for the canopy effect on density (beta = 0.5 per SD) vs number of marked animals.
+params:
+  density_beta_canopy: 0.5

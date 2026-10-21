@@ -1,0 +1,4 @@
+# Negative control (false-positive rate): no group effect, second gradient has no effect
+# (flat niches, tol2 = 1000), gradients uncorrelated. Truth for soil-moisture and habitat estimands is ~0.
+params: {group_effect_sd: 0, tol2: 1000}
+design: {env_cor: 0}

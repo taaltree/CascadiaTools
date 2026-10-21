@@ -1,0 +1,5 @@
+# NEGATIVE CONTROL / false-positive rate: Ne = 10,000 (het_loss = 0.00005,
+# effectively no drift signal). "Power" = share of replicates whose CI for
+# het_loss excludes 0, i.e. that wrongly report a finite upper limit for Ne.
+params: {Ne: 10000}
+design: {n_ind: 60, n_fullsib_pairs: 0, n_halfsib_pairs: 0, n_unrelated_pairs: 0}

@@ -1,0 +1,2 @@
+# Default design, delta-method (Sobel-type) intervals for indirect effects.
+settings: {ci_method: delta}

@@ -1,0 +1,28 @@
+# Panel with Gaussian outcome (e.g. snail biomass index), unit fixed effects only, 20 sites x 5 years.
+design:
+  dag: |
+    dag {
+      U [latent]
+      U -> temperature
+      U -> snails
+      upwelling -> temperature
+      upwelling -> snails
+      temperature -> snails
+    }
+  exposure: temperature
+  outcome: snails
+  family: gaussian
+  n_units: 20
+  n_times: 5
+  unit_level: [U]
+  unit_constant: [U]
+  panel: fixed
+params:
+  b_U__temperature: 0.7
+  b_U__snails: 0.6
+  b_upwelling__temperature: -0.3
+  b_upwelling__snails: 0.3
+  b_temperature__snails: 0.25
+  intercept: 0
+  sigma: 0.7
+settings: {whatif: false}

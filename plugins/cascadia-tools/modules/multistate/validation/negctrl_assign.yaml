@@ -1,0 +1,5 @@
+# Negative control: default multievent data, but 'state unknown' records are
+# forced into state A (a common shortcut: assume the commonest state).
+settings:
+  unknown_handling: assign
+  naive_state: A

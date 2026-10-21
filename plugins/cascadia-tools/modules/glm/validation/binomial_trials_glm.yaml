@@ -1,0 +1,3 @@
+# Binomial successes/trials (2-6 trials per unit), no random effect, 120 units
+params: {beta_intercept: 0.3, beta_forest: 0.4, beta_temp: -0.3, beta_habitat_riparian: 0.5, beta_habitat_wetland: -0.4}
+design: {family: binomial, offset: null, n_groups: 0, n: 120, trials: [2, 6], response: hatched}

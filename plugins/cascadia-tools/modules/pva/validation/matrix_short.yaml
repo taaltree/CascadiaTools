@@ -1,0 +1,3 @@
+# Harder: 8 monitoring years, half the marked animals
+design: {model: matrix, threshold: 20, horizons: [10, 25, 50], n_mon_years: 8, n_marked_juv: 30, n_marked_sub: 15, n_marked_ad: 40, n_breeders: 20}
+settings: {model: matrix}

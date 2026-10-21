@@ -1,0 +1,3 @@
+# Negative control: deliberately wrong estimator (Nei GST / He with no sample-size correction), small samples
+design: {n_ind: 8}
+settings: {estimator: naive}

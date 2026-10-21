@@ -1,0 +1,29 @@
+# Example: coastal tailed frog (Ascaphus truei) microsatellites, 8 Oregon Coast Range streams.
+# NOTE: the genotypes are SIMULATED (Wright-Fisher, distance-limited dispersal, with one small,
+# nearly isolated population: DRIFT) so that the right answer is known.
+data:
+  genotypes: tailed_frog_microsats.csv   # one row per frog; two columns per locus (GenAlEx style), 0 = missing
+  format: two_column
+  id_col: individual
+  pop_col: population
+  metadata: tailed_frog_sites.csv        # one row per stream: population, latitude, longitude
+  ibd_distance: log                      # 2-D landscape; use 'linear' for animals confined to one river
+settings:
+  ci: 0.95
+  hwe: true
+  dapc: true
+  mantel_perm: 999
+  amova: true
+figures:
+  journal: esa                # sets widths and font size (generic | esa | besjournals | ...)
+  formats: [pdf, png]
+  ci: 0.95                    # interval level drawn in diversity and ibd (redrawn from stored SEs)
+  greyscale: false            # true: grey shades + symbols for print
+  labels:
+    population: "Stream"
+    NFSIU: "NFSIU"            # rename a population code everywhere, e.g. "North Fork Siuslaw"
+    distance: "Distance between streams (km, log scale)"
+    cluster: "Genetic cluster"
+  # include: [diversity, fst_matrix, ibd, pca, dapc_assignment]   # only these
+  per_figure:
+    sample_map: {width: single, height: 95}

@@ -1,0 +1,32 @@
+# Planted-truth recovery at the design of the example dataset (SIMULATED forest birds,
+# modules/jsdm/example/make_example.R, seed 20261019; truth in example/truth.csv).
+#   120 point-count stations, 15 species, 2 site covariates (July temperature, canopy cover;
+#   standardised, observed correlation -0.27), 1 trait (log body mass), 2 true latent factors,
+#   presence/absence (probit).
+# The module's simulator names the covariates "temperature" and "forest"; here
+#   temperature = July mean max. temperature, forest = canopy cover.
+# Values are the generating values used in make_example.R:
+#   Gamma (rows intercept/temp/canopy; cols intercept, log body mass) =
+#     [-0.4, 0.35; 0.5, -0.45; 0.4, 0.30], species SD 0.5, loading SD 0.9 and 0.6.
+# community: random (each replicate draws new species deviations and loadings from the
+# trait model), as in the validated default design. Fit settings: module fast_settings.
+# Run:
+#   scripts/ejob -c 16 -m 32 -t 3:00:00 -l logs/jsdm_si_recover.log -- scripts/Rscript core/run.R recover jsdm \
+#     --config modules/jsdm/example/recovery.yaml --nsim 100 --cores 16 --out results/jsdm/si/recovery
+params:
+  comm_mean_intercept: -0.4
+  comm_mean_temperature: 0.5
+  comm_mean_forest: 0.4
+  trait_log_body_mass_on_intercept: 0.35
+  trait_log_body_mass_on_temperature: -0.45
+  trait_log_body_mass_on_forest: 0.3
+  species_sd: 0.5
+  loading_sd1: 0.9
+  loading_sd2: 0.6
+design:
+  n_sites: 120
+  n_species: 15
+  n_factors: 2
+  response: presence
+  cov_correlation: -0.27
+  community: random

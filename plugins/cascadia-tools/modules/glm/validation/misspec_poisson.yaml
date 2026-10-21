@@ -1,0 +1,2 @@
+# NEGATIVE CONTROL: NB data fitted as Poisson (ignores overdispersion)
+settings: {force_family: poisson}

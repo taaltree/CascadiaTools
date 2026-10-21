@@ -1,0 +1,13 @@
+cff-version: 1.2.0
+message: "If you use CascadiaTools, please cite it as below, together with the packages each analysis report lists."
+title: "CascadiaTools: validated analysis modules and protocols for AI-assisted ecological analysis"
+authors:
+  - family-names: Levi
+    given-names: Taal
+    affiliation: "Cascadia Wildlife Lab, Oregon State University"
+version: 0.1.0
+date-released: 2026-10-21
+license: MIT
+repository-code: "https://github.com/taaltree/CascadiaTools"
+url: "https://cascadiawildlifelab.org/tools/"
+keywords: [ecology, wildlife, fisheries, conservation genetics, occupancy, spatial capture-recapture, simulation, AI agents]

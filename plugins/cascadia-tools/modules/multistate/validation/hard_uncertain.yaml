@@ -1,0 +1,7 @@
+# Harder design: high state uncertainty (state recorded for only 30-35% of
+# detections) and fewer animals (25 newly marked per occasion, 175 in total).
+params:
+  assignment_A: 0.30
+  assignment_B: 0.35
+design:
+  n_marked: 25

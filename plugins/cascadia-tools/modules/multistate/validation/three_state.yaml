@@ -1,0 +1,21 @@
+# Three sites (wetlands W1-W3), multistate AS, no covariates, 50 marked per occasion.
+params:
+  survival_W1: 0.8
+  survival_W2: 0.7
+  survival_W3: 0.6
+  transition_W1_to_W2: 0.15
+  transition_W1_to_W3: 0.05
+  transition_W2_to_W1: 0.20
+  transition_W2_to_W3: 0.10
+  transition_W3_to_W1: 0.10
+  transition_W3_to_W2: 0.25
+  detection_W1: 0.6
+  detection_W2: 0.5
+  detection_W3: 0.4
+design:
+  states: [W1, W2, W3]
+  model: AS
+  n_marked: 50
+  survival_covs: []
+  transition_covs: []
+  detection_covs: []

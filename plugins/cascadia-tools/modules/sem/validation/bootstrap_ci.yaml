@@ -1,0 +1,2 @@
+# Default design, nonparametric bootstrap percentile intervals (300 resamples).
+settings: {ci_method: bootstrap, n_boot: 300, dsep: false}

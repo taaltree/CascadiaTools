@@ -1,0 +1,4 @@
+# False-positive rate: stable population, mu = 0
+params: {mu: 0}
+design: {model: count}
+settings: {model: count, method: diffusion}

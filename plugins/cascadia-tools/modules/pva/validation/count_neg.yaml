@@ -1,0 +1,4 @@
+# Negative control: same counting-error data, but fitted with the diffusion model (ignores counting error)
+params: {sigma2: 0.02, tau2: 0.02}
+design: {model: count, method: state_space}
+settings: {model: count, method: diffusion}

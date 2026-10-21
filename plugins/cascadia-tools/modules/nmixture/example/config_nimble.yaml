@@ -1,0 +1,17 @@
+# Same point counts as config.yaml, fitted in a Bayesian framework (NIMBLE).
+data:
+  model: static
+  species: Hermit warblers
+  counts: point_counts.csv
+  site_col: point
+  visit_col: visit
+  count_col: count
+  obs_covs: [julian_day, wind_beaufort, observer]
+  site_covs: points.csv
+formulas:
+  lambda: "~ canopy_cover_pct + elevation_m"
+  p: "~ wind_beaufort + julian_day + observer"
+settings:
+  engine: nimble
+  mixture: P
+  gof_nboot: 300

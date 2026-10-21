@@ -1,0 +1,2 @@
+# Poisson counts, optimal adjustment set (Henckel et al. 2022) instead of the smallest minimal set.
+design: {family: poisson, adjust: optimal}

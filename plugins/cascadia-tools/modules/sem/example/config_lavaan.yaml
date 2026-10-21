@@ -1,0 +1,28 @@
+# lavaan SEM with a latent variable: grazing and soil fertility (measured by
+# three soil indicators) acting on plant biomass and species richness.
+data:
+  file: grassland_plots.csv
+  transform:                              # rescale so variances are comparable
+    soil_n_x10: soil_n_pct * 10           # N in units of 0.1 %
+    biomass_100g: biomass_g_m2 / 100      # biomass in 100 g/m2
+engine: lavaan
+lavaan: |
+  fertility =~ soil_om_pct + soil_c_pct + soil_n_x10
+  biomass_100g ~ fertility + grazing_au_ha
+  plant_richness ~ biomass_100g + grazing_au_ha
+effects:
+  - {from: grazing_au_ha, to: plant_richness}
+  - {from: fertility, to: plant_richness}
+units:
+  grazing_au_ha: 1
+labels:
+  fertility: Soil fertility (latent)
+  grazing_au_ha: Grazing (AU/ha)
+  biomass_100g: Biomass (100 g/m2)
+  plant_richness: Plant species richness
+  soil_om_pct: Organic matter (%)
+  soil_c_pct: Soil C (%)
+  soil_n_x10: Soil N (0.1 %)
+settings:
+  estimator: ML
+  ci_method: montecarlo

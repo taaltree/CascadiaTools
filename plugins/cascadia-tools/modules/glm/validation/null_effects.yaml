@@ -1,0 +1,2 @@
+# NEGATIVE CONTROL (false-positive rate): forest and temp have NO effect
+params: {beta_forest: 0, beta_temp: 0}

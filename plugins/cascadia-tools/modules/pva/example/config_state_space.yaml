@@ -1,0 +1,17 @@
+# Count-based PVA with counting error: annual breeding-pair survey of a coastal shorebird
+# (simulated example data; 5 years were not surveyed and are left blank).
+# Question: is the population declining, and how likely is it to fall to 40 pairs within 10-25 years?
+settings:
+  model: count
+  method: state_space          # exponential-growth state-space model, Bayesian by exact grid integration of the REML likelihood (Staples et al. 2004; Humbert et al. 2009)
+  threshold: 40 
+  horizons: [10, 25]
+  ndraw_ss: 4000               # posterior draws for intervals and risk
+data:
+  file: shorebird_breeding_pairs.csv
+  year_col: survey_year
+  count_col: breeding_pairs    # blank cells = year not surveyed
+  species: the shorebird population
+  units: breeding pairs
+figures:
+  journal: esa

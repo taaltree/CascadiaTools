@@ -1,0 +1,22 @@
+# Matrix PVA estimated directly from annual monitoring data (2 stages, female-only, pre-breeding census).
+# The module estimates each vital rate's mean, standard error and environmental SD (sampling variance removed).
+settings:
+  model: matrix
+  threshold: 20
+  horizons: [10, 25, 50]
+  scenarios:
+    - name: First-year survival +10%
+      multiply: {s_juv: 1.10}
+data:
+  demography: annual_monitoring.csv   # columns: year, rate, n (at risk / breeders), events (survivors / offspring)
+  rate_types: {s_juv: survival, s_sub: survival, s_ad: survival, fec: fecundity}
+  stages: [yearling, adult]
+  matrix:
+    - ["0",     "fec * s_juv"]
+    - ["s_sub", "s_ad"]
+  initial_abundance: {yearling: 15, adult: 45}
+  ceiling: 250
+  species: the monitored population (simulated example)
+  units: females
+figures:
+  journal: esa

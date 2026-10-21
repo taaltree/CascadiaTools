@@ -1,0 +1,2 @@
+# Harder design 2: weakly separated states (step means 100 vs 200 m, similar turning)
+params: {step_mean: [100, 200], step_sd: [80, 150], angle_kappa: [0.8, 1.5]}

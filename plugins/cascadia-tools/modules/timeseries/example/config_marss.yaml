@@ -1,0 +1,11 @@
+# Example: four herds counted each year 2000-2024. Do they share one trend?
+data:
+  file: herds_multi.csv
+  year: year
+  count: count
+  site: herd
+settings:
+  model: marss
+  trend: shared                # shared | separate
+  states: separate             # separate (each herd its own population) | single (replicate surveys of one population)
+  process_cov: diagonal and equal

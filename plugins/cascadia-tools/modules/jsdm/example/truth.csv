@@ -1,0 +1,49 @@
+"param","truth"
+"beta_intercept_Setophaga occidentalis",-1.55617215143161
+"beta_intercept_Cardellina pusilla",-0.879741092966236
+"beta_intercept_Geothlypis tolmiei",-0.852108044430906
+"beta_intercept_Troglodytes pacificus",-1.4253046069723
+"beta_intercept_Poecile rufescens",-1.02562814161547
+"beta_intercept_Sitta canadensis",-1.20658873028177
+"beta_intercept_Certhia americana",-0.75870658703636
+"beta_intercept_Regulus satrapa",-0.559761091818384
+"beta_intercept_Empidonax hammondii",-0.0607213333202131
+"beta_intercept_Catharus ustulatus",-0.557683803107807
+"beta_intercept_Ixoreus naevius",1.30588432248628
+"beta_intercept_Junco hyemalis",0.564209506553503
+"beta_intercept_Pipilo maculatus",0.365251347873957
+"beta_intercept_Piranga ludoviciana",-0.0931518122331224
+"beta_intercept_Dryobates villosus",-0.572363214887935
+"beta_july_temp_c_Setophaga occidentalis",0.729976295505313
+"beta_july_temp_c_Cardellina pusilla",0.439627688790932
+"beta_july_temp_c_Geothlypis tolmiei",0.401370397859908
+"beta_july_temp_c_Troglodytes pacificus",1.31592569114409
+"beta_july_temp_c_Poecile rufescens",0.309835554693573
+"beta_july_temp_c_Sitta canadensis",0.289347928671247
+"beta_july_temp_c_Certhia americana",0.849069160604007
+"beta_july_temp_c_Regulus satrapa",0.924942656531585
+"beta_july_temp_c_Empidonax hammondii",0.478319508943454
+"beta_july_temp_c_Catharus ustulatus",-0.359822172315904
+"beta_july_temp_c_Ixoreus naevius",0.375101631403187
+"beta_july_temp_c_Junco hyemalis",0.157023148260428
+"beta_july_temp_c_Pipilo maculatus",0.17461034726395
+"beta_july_temp_c_Piranga ludoviciana",-0.259520544064993
+"beta_july_temp_c_Dryobates villosus",-0.381371536463956
+"beta_canopy_cover_pct_Setophaga occidentalis",0.430912060397554
+"beta_canopy_cover_pct_Cardellina pusilla",-0.409226558772933
+"beta_canopy_cover_pct_Geothlypis tolmiei",-0.0236751755056464
+"beta_canopy_cover_pct_Troglodytes pacificus",-0.285106215215519
+"beta_canopy_cover_pct_Poecile rufescens",0.0629065540853877
+"beta_canopy_cover_pct_Sitta canadensis",1.18339313814373
+"beta_canopy_cover_pct_Certhia americana",0.295843089692867
+"beta_canopy_cover_pct_Regulus satrapa",-0.534002512205587
+"beta_canopy_cover_pct_Empidonax hammondii",0.362664569557589
+"beta_canopy_cover_pct_Catharus ustulatus",0.505227433901611
+"beta_canopy_cover_pct_Ixoreus naevius",1.46651677541057
+"beta_canopy_cover_pct_Junco hyemalis",0.627690098347141
+"beta_canopy_cover_pct_Pipilo maculatus",0.285409353939084
+"beta_canopy_cover_pct_Piranga ludoviciana",1.27949262062249
+"beta_canopy_cover_pct_Dryobates villosus",0.56433690712621
+"comm_mean_july_temp_c",0.5
+"comm_mean_canopy_cover_pct",0.4
+"trait_log_body_mass_g_on_july_temp_c",-0.45

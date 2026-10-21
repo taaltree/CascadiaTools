@@ -1,0 +1,3 @@
+# Poisson counts with MODEL-BASED SEs (shows why vcov auto uses sandwich SEs for poisson).
+design: {family: poisson}
+settings: {whatif: false, vcov: model}

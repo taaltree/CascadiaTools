@@ -1,0 +1,45 @@
+# Example: hourly GPS fixes from 5 elk (SIMULATED data with known truth, see
+# example_truth.rds; tpm_*_forest truth -0.025 / +0.025 per % cover).
+# Run:  scripts/Rscript core/run.R fit movement-hmm --config modules/movement-hmm/example/config.yaml --out results/movement-hmm/example
+data:
+  file: elk_gps.csv              # one row per GPS fix (failed fixes can simply be absent)
+  id: animal_id                  # animal / collar identifier
+  time: timestamp                # date-time of the fix
+  time_format: "%Y-%m-%d %H:%M:%S"
+  tz: America/Los_Angeles        # LOCAL time zone, so hour of day means local clock time
+  lon: longitude                 # WGS84 decimal degrees; projected to UTM metres automatically
+  lat: latitude
+  # crs_out: 32610               # optional: EPSG code to project to (default: UTM zone of the data)
+  # x: utm_e                     # alternative to lon/lat: coordinates already in metres
+  # y: utm_n
+  covariates: [forest_cover_pct] # covariates on the transition probabilities (measured at each fix)
+  time_of_day: true              # cos/sin of hour on the transition probabilities
+  # interval_h: 1                # nominal fix interval; default = most common gap between fixes
+settings:
+  nstates: 2                     # 2 or 3 behavioural states (see README: choosing the number of states)
+  nstarts: 10                    # random starting values (local optima check)
+  retryFits: 0                   # extra momentuHMM perturbation refits per start
+  ndraws: 2000                   # parameter draws for confidence intervals of derived quantities
+  regularise: grid               # grid (snap fixes to a regular grid, gaps = missing) or crawl
+  tolerance: 0.25                # max offset from the grid, as a fraction of the interval
+  state_names: ["Encamped (short steps)", "Travelling (long steps)"]
+figures:                         # publication figures (see README "Figures" and skills/eco-figures)
+  journal: esa                   # sets column widths and font size
+  width: single
+  formats: [pdf, png]
+  ci: 0.95                       # outer band / interval
+  inner_ci: 0.5                  # inner band
+  greyscale: false               # true: grey states, told apart by linetype / shape
+  labels:
+    forest_cover_pct: "Forest cover (%)"
+    hour: "Hour of day (local time)"
+    # state1: "Encamped"         # overrides settings: state_names in figures
+  ids: [elk_F01, elk_F02, elk_F03, elk_F04, elk_F05]   # animals in decoded_track
+  # include: [state_distributions, stationary_tod, decoded_track]
+  per_figure:                    # 1.5-column width for one-panel figures, so the state legend
+                                 # on the right does not squeeze the plotting area
+    transition_tod: {width: onehalf, aspect: 0.6}
+    stationary_tod: {width: onehalf, aspect: 0.6}
+    transition_forest_cover_pct: {width: onehalf, aspect: 0.6}
+    stationary_forest_cover_pct: {width: onehalf, aspect: 0.6}
+    coefficients: {width: onehalf, aspect: 0.6}

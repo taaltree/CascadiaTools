@@ -1,0 +1,2 @@
+design: {n_per_group: 60, Z: 0.9}
+settings: {engine: nimble, group_effects: fixed}

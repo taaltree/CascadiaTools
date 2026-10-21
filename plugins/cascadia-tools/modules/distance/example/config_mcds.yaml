@@ -1,0 +1,38 @@
+# Mule deer winter-range survey: 36 line transects (1.6-4.2 km) walked in January 2025 across a
+# 360 km2 study area split into north and south management units (180 km2 each).
+# Observers recorded the perpendicular distance (m, laser rangefinder + compass) and size of every deer group seen.
+# Questions: how many deer are on the winter range, and is deer density associated with shrub cover
+# (forage) and distance from the main road (disturbance)?
+data:
+  survey: line
+  species: mule deer
+  group_word: group
+  observations: deer_observations.csv   # one row per group detected
+  transects: deer_transects.csv         # one row per transect, including any with no detections
+  transect_col: transect_id
+  distance_col: perp_distance_m
+  distance_units: m
+  distance_type: exact
+  size_col: group_size
+  length_col: length_km
+  length_units: km
+  stratum_col: stratum
+  study_area_km2: {north: 180, south: 180}
+  truncation_m: 400                     # chosen before fitting: drops the few detections beyond 400 m
+  prediction_grid: study_area_grid.csv  # 1-km2 cells of the study area with the same covariates (for abundance map)
+formulas:
+  density: "~ shrub_cover_pct + road_dist_km"   # hierarchical model: log density per transect
+  detection: "~ observer"                       # MCDS: observer affects detection scale
+settings:
+  engine: auto            # ds (design-based density/abundance) + hds (habitat effects on density)
+  keys: [hn, hr]
+  adjustment: cos
+  max_adjustments: 2
+  hds_bins: 10
+  gof_nboot: 200
+figures:
+  labels:
+    shrub_cover_pct: "Shrub cover (%)"
+    road_dist_km: "Distance from road (km)"
+    north: "North unit"
+    south: "South unit"

@@ -1,0 +1,3 @@
+# Negative control for the gate: report unadjusted R2 (vegan rda() summary default) as if it estimated
+# the population share. Expected to FAIL (upward bias ~ p/(n-1)).
+settings: {r2: unadjusted}

@@ -1,0 +1,11 @@
+# Negative control: 3-state data, deliberately mis-specified 2-state fit
+params:
+  step_mean: [30, 200, 700]
+  step_sd: [25, 150, 400]
+  angle_kappa: [0.3, 1.0, 4.0]
+  tpm_intercept: [-1.5, -3.0, -1.5, -1.5, -3.0, -1.2]
+  tpm_tod_cos:   [-0.8, -0.5, 0.5, -0.3, 0.5, 0.5]
+  tpm_tod_sin:   [0.3, 0.0, 0.0, 0.0, 0.0, 0.0]
+  tpm_forest:    [-0.02, 0.0, 0.02, 0.0, 0.0, 0.02]
+design: {n_animals: 6, n_fixes: 1000}
+settings: {nstates: 2}

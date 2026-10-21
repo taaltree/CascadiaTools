@@ -1,0 +1,36 @@
+# Planted-truth check (eco-planted-truth) at the design of the Wood Thrush example
+# (wood_thrush_counts.csv): 45 stations x 4 visits, NB2 counts, survey-minute offset,
+# station random intercept. Truths are the generating values of the example data
+# (dev/glm/make_examples.R, seed 20261018) converted to the fitted scale by
+# dev/glm/si_truth.R: per 1 SD of each continuous predictor (canopy SD 15.6 %,
+# elevation SD 234 m), intercept = log expected count per survey minute at the
+# predictor means in deciduous forest.
+# Run: scripts/ejob -c 16 -m 32 -t 3:00:00 -l logs/glm_si_recover.log -- scripts/Rscript core/run.R recover glm \
+#        --config modules/glm/example/recovery.yaml --nsim 200 --cores 16 --out results/glm/si/recovery
+params:
+  beta_intercept: -2.08
+  beta_canopy_cover_pct: 0.39          # 0.025 per % x SD 15.6 % (rate ratio 1.28 per 10 points)
+  beta_elevation_m: -0.28              # -0.0012 per m x SD 234 m (rate ratio 0.89 per 100 m)
+  beta_forest_type_mixed: -0.25
+  beta_forest_type_conifer: -0.90
+  re_sd: 0.45                          # SD of station random intercepts (log scale)
+  dispersion: 3                        # NB size theta
+  # remove the module's default-design coefficients (not in this design)
+  beta_forest: ~
+  beta_temp: ~
+  beta_habitat_riparian: ~
+  beta_habitat_wetland: ~
+  zi_prob: ~
+design:
+  family: nbinom2
+  n_groups: 45                         # stations
+  n_per_group: 4                       # visits per station
+  group_name: station
+  response: wood_thrush
+  covariates:                          # all three are station-level, as in the field data
+    canopy_cover_pct: {type: normal, mean: 70, sd: 15.6, level: group}
+    elevation_m: {type: uniform, min: 180, max: 950, level: group}
+    forest_type: {type: factor, levels: [deciduous, mixed, conifer], level: group}   # first level = reference
+  interactions: ~
+  offset: {name: survey_min, min: 5, max: 10}   # field data use 5- or 10-min counts; simulator draws U(5, 10)
+  units: {canopy_cover_pct: 10, elevation_m: 100}

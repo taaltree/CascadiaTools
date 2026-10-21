@@ -1,0 +1,17 @@
+# Surplus production: demersal longline fishery, landings (t) and standardised survey CPUE (kg/hook), 1990-2021.
+# Question: what is MSY, and is the stock overfished or subject to overfishing in 2021?
+settings:
+  model: surplus_production
+  prior_r: [0.3, 0.6]              # median and log-SD of the lognormal prior on r (e.g. from FishBase resilience)
+  prior_K: [15000, 1.0]            # median and log-SD of the lognormal prior on K (t)
+  prior_P1: [1, 0.2]               # biomass in the first year relative to K (1 = fishery started near unfished)
+data:
+  file: longline_catch_cpue.csv
+  year_col: year
+  catch_col: landings_t
+  index_col: cpue_kg_per_hook
+  species: demersal longline stock
+  catch_units: t
+  index_name: "Survey CPUE (kg/hook)"
+figures:
+  journal: cjfas

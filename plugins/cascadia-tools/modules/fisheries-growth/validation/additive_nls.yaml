@@ -1,0 +1,3 @@
+# Additive normal error (sigma 30 mm), fitted with the additive model
+params: {error: additive, sigma: 30}
+settings: {engine: nls, error: additive}

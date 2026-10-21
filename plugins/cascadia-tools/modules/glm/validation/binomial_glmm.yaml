@@ -1,0 +1,3 @@
+# Bernoulli (0/1) GLMM, 40 sites x 8 visits
+params: {beta_intercept: -0.5, beta_forest: 0.4, beta_temp: -0.3, beta_habitat_riparian: 0.5, beta_habitat_wetland: -0.4, re_sd: 0.7}
+design: {family: binomial, offset: null, n_groups: 40, n_per_group: 8, response: present}

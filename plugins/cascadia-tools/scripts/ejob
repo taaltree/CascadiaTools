@@ -1,0 +1,56 @@
+#!/bin/bash
+# Run a command as a SLURM job and wait for it; output goes to a log file
+# (last 40 lines echoed at the end). Works from inside an interactive
+# allocation, where plain srun would try to add a step to the current job.
+# Jobs run in the directory ejob is called from (results stay in the
+# researcher's project). Usage: bin/ejob [-c cores] [-m memGB] [-t time] [-l logfile] [-g] [-n node] -- command args...
+#   -g  run on the GPU partition (fw_gpu, 1 A10).
+#   -n  force a node: njobvu | elakha | fwixy | chinook. Default "auto": the
+#       first of njobvu, elakha with enough idle cores right now; otherwise
+#       queue on njobvu. GPU nodes (fwixy: 3x A10; grace: GH200, aarch64 --
+#       our x86 R library won't run there) are not used for CPU work unless
+#       named explicitly; -g targets fwixy's A10s.
+cores=4; mem=16; time=4:00:00; log=""; gpu=0; node=${ECO_NODE:-auto}
+while [[ $1 != "--" && $# -gt 0 ]]; do
+  case $1 in -c) cores=$2; shift 2;; -m) mem=$2; shift 2;; -t) time=$2; shift 2;;
+             -l) log=$2; shift 2;; -g) gpu=1; shift;; -n) node=$2; shift 2;; *) echo "bad option $1"; exit 2;; esac
+done
+shift
+root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+[[ -z $log ]] && log=$root/logs/ejob_$(date +%Y%m%d_%H%M%S)_$$.log
+th=${ECO_THREADS:-1}
+# No SLURM (a laptop or workstation): run here, same environment, same log.
+if ! command -v sbatch >/dev/null 2>&1; then
+  echo "[ejob] no SLURM here; running locally ($cores cores requested)" >&2
+  ( OPENBLAS_NUM_THREADS=$th OMP_NUM_THREADS=$th MKL_NUM_THREADS=$th "$@" ) > "$log" 2>&1
+  rc=$?; echo "[ejob] exit $rc, log: $log"; tail -n 40 "$log"; exit $rc
+fi
+idle() { sinfo -h -N -n "$1" -o "%C" 2>/dev/null | head -1 | cut -d/ -f2; }
+if [[ $node == auto && $gpu == 0 ]]; then
+  node=njobvu
+  for cand in njobvu elakha; do
+    free=$(idle $cand); free=${free:-0}
+    if (( free >= cores )); then node=$cand; break; fi
+  done
+fi
+if [[ $gpu == 1 ]]; then part="-p fw_gpu -A fw --gres=gpu:1"
+else case $node in
+  njobvu|chinook) part="-p levi_lab -A levi_lab -w $node";;
+  elakha) part="-p fw -A fw -w elakha";;
+  fwixy) part="-p fw_gpu -A fw -w fwixy";;
+  *) echo "unknown node $node"; exit 2;;
+esac; fi
+echo "[ejob] submitting to ${node} ($cores cores)" >&2
+cmd=$(printf '%q ' "$@")
+for v in $(env | grep -o '^SLURM_[A-Z_]*'); do unset "$v"; done
+# Parallelism comes from forked R workers (one per core), so each worker's
+# BLAS/OpenMP must be single-threaded (th, set above); otherwise 16 workers x
+# 16 OpenBLAS threads oversubscribe the allocation. Override with ECO_THREADS.
+sbatch --wait --parsable $part -c "$cores" --mem="${mem}G" -t "$time" -J ecotools \
+  -o "$log" -D "$PWD" \
+  --export=ALL,XLA_PYTHON_CLIENT_PREALLOCATE=false,OPENBLAS_NUM_THREADS=$th,OMP_NUM_THREADS=$th,MKL_NUM_THREADS=$th \
+  --wrap "$cmd" > /dev/null
+rc=$?
+echo "[ejob] exit $rc, log: $log"
+tail -n 40 "$log"
+exit $rc

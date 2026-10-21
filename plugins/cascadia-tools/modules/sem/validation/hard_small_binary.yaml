@@ -1,0 +1,8 @@
+# HARDER design: 40 plots, binary outcome (bird species present/absent), logit link.
+params: {int_birds: 0.3, shrub_to_birds: 0.8, fire_to_birds: -0.5}
+design:
+  n_units: 40
+  model:
+    - {formula: "canopy ~ fire", family: gaussian}
+    - {formula: "shrub ~ canopy + moisture", family: gaussian}
+    - {formula: "birds ~ shrub + fire", family: binomial}

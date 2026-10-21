@@ -1,0 +1,6 @@
+"rate","type","mean","se","sd_env","n_years","description"
+"s_juv","survival",0.32,0.035,0.08,12,"first-year survival (CJS, age 0-1)"
+"s_sub","survival",0.66,0.045,0.06,12,"second-year survival (CJS, age 1-2)"
+"s_ad","survival",0.8,0.018,0.035,12,"adult survival (CJS, age 2+)"
+"b_sub","survival",0.4,0.07,0.1,12,"probability a 2-year-old breeds"
+"fec","fecundity",0.95,0.07,0.28,12,"female fledglings per breeding female (nest monitoring)"

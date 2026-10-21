@@ -1,0 +1,4 @@
+# Negative control: covariate has no effect on Linf or K
+params: {Linf_beta: 0, K_beta: 0}
+design: {hierarchical: true, n_groups: 10, n_per_group: 80}
+settings: {engine: nimble, group_effects: random}

@@ -1,0 +1,3 @@
+# Matrix PVA from 15 years of simulated monitoring (2-stage female model)
+design: {model: matrix, threshold: 20, horizons: [10, 25, 50]}
+settings: {model: matrix}

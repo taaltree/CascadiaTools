@@ -1,0 +1,32 @@
+# lavaan engine: latent soil fertility (3 indicators) -> biomass -> richness, plus grazing. n = 150.
+params:
+  fertility_to_om: 1.0
+  fertility_to_soilc: 0.7
+  fertility_to_soiln: 0.6
+  sd_om: 0.7
+  sd_soilc: 0.5
+  sd_soiln: 0.45
+  fertility_to_biomass: 0.9
+  grazing_to_biomass: -0.6
+  biomass_to_rich: -0.8
+  grazing_to_rich: 1.5
+  sd_biomass: 0.7
+  sd_rich: 2.5
+  sd_grazing: 0.7
+design:
+  n_units: 150
+  engine: lavaan
+  latent: [fertility]
+  model:
+    - {formula: "om ~ fertility", family: gaussian}
+    - {formula: "soilc ~ fertility", family: gaussian}
+    - {formula: "soiln ~ fertility", family: gaussian}
+    - {formula: "biomass ~ fertility + grazing", family: gaussian}
+    - {formula: "rich ~ biomass + grazing", family: gaussian}
+  lavaan: |
+    fertility =~ om + soilc + soiln
+    biomass ~ fertility + grazing
+    rich ~ biomass + grazing
+  effects:
+    - {from: grazing, to: rich}
+    - {from: fertility, to: rich}

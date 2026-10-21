@@ -1,0 +1,3 @@
+# Gaussian outcome (e.g. trout condition index), total AND controlled direct effect, 100 reaches.
+design: {family: gaussian, n_sites: 100, effect: both}
+params: {intercept: 0, sigma: 0.8}

@@ -1,0 +1,4 @@
+# Negative control (mis-specified): gear never catches fish < 250 mm, but the
+# model assumes a random sample of each age class.
+design: {min_length: 250}
+settings: {engine: nls}

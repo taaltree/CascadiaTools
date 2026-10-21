@@ -1,0 +1,12 @@
+# Example: a RADseq SNP panel (1,500 SNPs, 80 frogs, one sample) as 0/1/2
+# allele counts. SIMULATED data. Single sample: LD Ne, relatedness, heterozygosity.
+data:
+  genotypes: snp_panel_dosage.csv
+  format: dosage
+  id_column: individual
+  pop_column: population
+  missing: [NA, -9]
+  marker: snp
+settings:
+  pcrit: auto
+  max_loci: 3000

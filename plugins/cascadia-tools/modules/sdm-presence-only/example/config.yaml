@@ -1,0 +1,29 @@
+# Pacific marten (Martes caurina) presence-only records, 1995-2024, in a 60 x 60 km block
+# of the Oregon Cascades (UTM zone 10N, metres). Records come from iNaturalist, ODFW
+# incidental reports, museum specimens and trapper reports, so they cluster near roads.
+# Question: which habitat (forest cover, elevation) is marten occurrence associated with,
+# after allowing for the fact that people record martens mostly near roads?
+data:
+  presence: presence_records.csv     # one row per record
+  presence_x: easting
+  presence_y: northing
+  species_col: species               # optional: keep only these species
+  species: "Martes caurina"
+  covariate_grid: covariate_grid.csv # one row per grid cell (regular grid, cell centres)
+  grid_x: easting
+  grid_y: northing
+  coord_unit: m                      # m or km; cell area is computed from the spacing
+  habitat_covariates: [forest_cover_pct, elevation_m]
+  bias_covariates: [dist_road_km]    # drives where people LOOK, not where martens live
+  quadratic: []                      # habitat covariates that also get a squared term
+  labels:
+    forest_cover_pct: "Forest cover (%)"
+    elevation_m: "Elevation (m)"
+    dist_road_km: "Distance to road (km)"
+settings:
+  engine: ppm                        # ppm | maxnet | integrated (needs survey) | auto
+  cv_folds: 5
+  cv_block_size: 12000               # spatial block side for cross-validation (m)
+figures:                             # presentation only (docs/FIGURES.md)
+  per_figure:
+    effect_elevation_m: {xlim: [700, 2300]}   # keeps the 2200 m tick label inside the plot

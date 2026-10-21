@@ -1,0 +1,39 @@
+# Bobcat (Lynx rufus) camera-trap survey: 48 cameras ~1.6 km apart, 8 weekly
+# occasions (June-July 2025); individuals identified from coat spot patterns.
+# Question: what is bobcat density, and is it associated with canopy cover?
+data:
+  traps: cameras.csv              # one row per camera
+  trap_id_col: camera_id
+  x_col: utm_e                    # UTM easting (m)
+  y_col: utm_n                    # UTM northing (m)
+  usage_col: weeks_active         # "11110000": camera working (1) or not (0) each week
+  detection_covariates: [on_trail]   # camera on a road/trail (1) or off-trail (0)
+  captures: bobcat_detections.csv # one row per photo-detection (extra columns ignored)
+  individual_col: cat_id
+  occasion_col: week
+  trap_col: camera_id
+  units: m
+  mask: habitat_grid.csv          # regular 400 m grid of pixel centres covering cameras + 5 km
+  habitat_col: habitat            # 0 = reservoir (not habitat)
+  density_covariates: [canopy_cover_pct]
+  labels:
+    canopy_cover_pct: "Canopy cover (%)"
+    on_trail: "Camera on trail"
+settings:
+  engine: nimble                  # nimble (Bayesian, default) | numpyro | secr
+  approach: marginal
+  compare_engines: [secr]         # independent likelihood fit on the same data
+figures:                          # publication figures (docs/FIGURES.md); redraw without refitting:
+                                  # scripts/Rscript core/run.R figures scr --fit <out>/scr_fit.rds --config modules/scr/example/config.yaml
+  formats: [pdf, png]
+  labels:                         # readable names in the trace / posterior panels
+    density_per_km2: "Density (per km²)"
+    abundance: "Abundance (N)"
+    baseline_detection: "Baseline detection p0"
+    sigma: "sigma (m)"
+    home_range_area_95: "95% home range (km²)"
+    density_beta_canopy_cover_pct: "Density: canopy (per SD)"
+    detection_beta_on_trail: "Detection: on trail (logit)"
+  per_figure:
+    detection_function: {legend: bottom, axis: {x: "Distance to camera (m)"}}   # long axis title was clipped
+    coefficients: {width: onehalf, aspect: 0.6, axis: {x: "Coefficient (log: density; logit: detection)"}}

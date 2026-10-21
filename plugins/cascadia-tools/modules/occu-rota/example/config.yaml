@@ -1,0 +1,60 @@
+# Camera-trap survey, 220 stations, 6 weekly occasions (June-July 2024).
+# Question: do gray foxes occur less often where coyotes are present, and does
+# that depend on housing density (human disturbance), after allowing for
+# imperfect detection?
+data:
+  detections: camera_detections.csv   # one row per camera x week
+  format: wide_species                # one 0/1 column per species
+  site_col: camera_id
+  survey_col: week
+  species_cols: [coyote, gray_fox]    # 2 or 3 species; the order sets the names (coyote:gray_fox)
+  surveyed_col: days_active           # weeks with 0 active camera-days count as not surveyed
+  obs_covs: [days_active]             # survey-level covariates
+  site_covs: camera_sites.csv         # one row per camera
+  max_order: 2
+formulas:
+  occupancy: "~ forest_pct + log(housing_per_km2)"    # first-order natural parameters (each species)
+  interaction: "~ log(housing_per_km2)"               # coyote:gray_fox natural parameter
+  detection: "~ days_active + on_trail"               # per species
+settings:
+  engine: unmarked
+  gof_nboot: 200
+figures:                      # optional: publication figures (docs/FIGURES.md, skills/eco-figures)
+  journal: esa                # generic | esa | besjournals | wiley_jwm | cjfas | plos | nature | slide
+  width: single               # single | onehalf | double | mm
+  formats: [pdf, png]         # add tiff / svg / eps if the journal wants them
+  ci: 0.95                    # outer band / interval
+  inner_ci: 0.5               # inner band (Nimble engine only)
+  show_data: true             # rug of surveyed covariate values
+  greyscale: false            # true: grey palette; groups stay separable by linetype / shape
+  # include: [conditional_occupancy, interaction_housing_per_km2, co_occurrence_matrix, coefficients]
+  # exclude: [gof]
+  per_figure:
+    conditional_occupancy: {legend: bottom}     # legends under the panels so the curves get the full width
+  # per_figure:
+  #   conditional_occupancy: {width: double, aspect: 0.5}
+  # units:                    # only if a covariate column is already z-scored: back-transform the x axis
+  #   forest_pct: {center: 52.3, scale: 21.0}
+  labels:
+    coyote: "Coyote"
+    gray_fox: "Gray fox"
+    bobcat: "Bobcat"
+    forest_pct: "Forest cover within 500 m (%)"
+    housing_per_km2: "Housing density (units per km²)"
+    days_active: "Camera-days active in the week"
+    on_trail: "Camera on trail"
+    # short names for the coefficient plot (by parameter name), so labels fit on one line
+    occ_coyote_beta_forest_pct: "Coyote: forest cover"
+    occ_coyote_beta_log_housing_per_km2: "Coyote: log housing density"
+    occ_gray_fox_beta_forest_pct: "Gray fox: forest cover"
+    occ_gray_fox_beta_log_housing_per_km2: "Gray fox: log housing density"
+    interaction_coyote_gray_fox: "Coyote x gray fox (average site)"
+    interaction_coyote_gray_fox_beta_log_housing_per_km2: "Coyote x gray fox: log housing"
+    p_coyote_beta_days_active: "Coyote: days active"
+    p_coyote_beta_on_trailyes: "Coyote: on trail"
+    p_gray_fox_beta_days_active: "Gray fox: days active"
+    p_gray_fox_beta_on_trailyes: "Gray fox: on trail"
+    # axis and legend words can be renamed too, e.g.
+    # detection_axis: "Weekly detection probability"
+    # interaction_axis: "Co-occurrence odds ratio"
+    # conditional_axis: "Probability %s present"   # %s = species name

@@ -1,0 +1,2 @@
+# Partial selfing 0.3 -> FIS ~ s/(2-s) = 0.18 (inbreeding signal)
+params: {selfing: 0.3}

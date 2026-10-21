@@ -1,0 +1,27 @@
+# Plethodontid salamander night counts on 60 headwater stream reaches, 3 visits per summer, 2022-2025.
+# Question: how many salamanders are on the reaches each year, and are numbers changing?
+data:
+  model: dynamic
+  species: salamanders
+  counts: stream_counts.csv
+  format: long
+  site_col: reach
+  season_col: year               # primary period (population closed among visits within a year)
+  visit_col: night
+  count_col: salamanders
+  obs_covs: [water_temp_c]
+  site_covs: reaches.csv
+formulas:
+  lambda: "~ canopy_pct"         # initial abundance (first year)
+  gamma: "~ 1"                   # recruits per reach per year
+  omega: "~ 1"                   # apparent survival between years
+  p: "~ water_temp_c"            # detection per salamander per night
+settings:
+  engine: unmarked
+  mixture: P
+  gof_nboot: 100
+figures:
+  labels:
+    canopy_pct: "Canopy cover (%)"
+    water_temp_c: "Water temperature (°C)"
+    season: "Year"

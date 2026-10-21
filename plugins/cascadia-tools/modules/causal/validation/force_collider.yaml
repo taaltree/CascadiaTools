@@ -1,0 +1,2 @@
+# NEGATIVE CONTROL: main estimate forced to also adjust for the collider (algae).
+settings: {force_adjust: [elevation, sediment, width, algae]}

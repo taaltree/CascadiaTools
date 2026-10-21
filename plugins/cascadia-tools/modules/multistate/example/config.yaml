@@ -1,0 +1,46 @@
+# Example: chytrid (Bd) infection dynamics in a marked frog population.
+# 280 frogs, 8 annual surveys (2015-2022); each capture records infection
+# status from a skin swab: uninfected, infected, or U when the swab was lost
+# or inconclusive (state unknown -> multievent model).
+data:
+  captures: frog_captures.csv      # long format: one row per capture
+  format: long                     # long | wide | ch
+  id_col: frog_id
+  occasion_col: year
+  state_col: bd_status
+  states: [uninfected, infected]   # order fixes state numbering; first = reference for initial-state logits
+  unknown_code: U                  # value used when the animal was caught but its state is unknown
+  model: auto                      # auto (multievent if any U), multievent, or AS
+  interval_unit: year              # wording used in the report ("survival per year")
+  individuals: frog_individuals.csv   # frog_id + individual covariates
+  occasions: survey_years.csv         # year + occasion covariates
+  survival: [svl_mm]               # individual or occasion covariates on survival
+  transition: [water_temp_C]       # covariates on transitions (one slope per transition)
+  detection: [survey_hours]        # occasion covariates on detection
+settings:
+  niter: 6000
+  nburnin: 2000
+  nchains: 3
+figures:
+  labels:
+    uninfected: "Uninfected"
+    infected: "Infected"
+    svl_mm: "Snout-vent length (mm)"
+    water_temp_C: "Mean water temperature (°C)"
+    survey_hours: "Survey effort (person-hours)"
+    occasion: "Year"
+    # panel titles of the trace and posterior-density figures
+    survival_uninfected: "Survival, uninfected"
+    survival_infected: "Survival, infected"
+    transition_uninfected_to_infected: "Infection (uninfected to infected)"
+    transition_infected_to_uninfected: "Clearance (infected to uninfected)"
+    detection_uninfected: "Detection, uninfected"
+    detection_infected: "Detection, infected"
+    assignment_uninfected: "Swab result obtained, uninfected"
+    assignment_infected: "Swab result obtained, infected"
+    initial_uninfected: "Uninfected at first capture"
+    initial_infected: "Infected at first capture"
+    survival_beta_svl_mm: "Survival slope: body length (per SD)"
+    transition_beta_water_temp_C_uninfected_to_infected: "Infection slope: water temp. (per SD)"
+    transition_beta_water_temp_C_infected_to_uninfected: "Clearance slope: water temp. (per SD)"
+    detection_beta_survey_hours: "Detection slope: effort (per SD)"

@@ -1,0 +1,23 @@
+# Example: one herd counted from the air each winter, 1994-2024 (3 winters not
+# flown). Question: is the herd declining, how large is it really, is growth
+# density dependent, and do deep-snow winters reduce growth?
+# Run: scripts/Rscript core/run.R fit timeseries --config modules/timeseries/example/config.yaml
+data:
+  file: herd_counts.csv
+  year: year
+  count: animals_counted
+  covariates: [snow_depth_cm]
+  count_label: "Animals counted"
+  covariate_labels:
+    snow_depth_cm: "Mean winter snow depth (cm)"
+settings:
+  model: bayes                 # exponential | gompertz | marss | bayes | loglinear
+  density_dependence: true     # Gompertz term in the Bayesian model
+  prior_sd_observation: [0, 1] # half-normal(mean, sd); give an informative one if you know count error
+figures:
+  labels:
+    snow_depth_cm: "Mean winter snow depth (cm)"
+    abundance: "Estimated number of deer"   # y axis of trajectory/forecast, x axis of density_dependence
+  # years-of-monitoring power curve for a 5%/yr decline from `core/run.R power` (drawn only if the file exists;
+  # regenerate: scripts/Rscript core/run.R power timeseries --config dev/timeseries/power_exp5.yaml --vary n_years=8,10,12,15,20,25,30,40 --nsim 200)
+  power_csv: results/timeseries/power_5pct/timeseries_power.csv

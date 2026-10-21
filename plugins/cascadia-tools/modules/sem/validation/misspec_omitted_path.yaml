@@ -1,0 +1,13 @@
+# NEGATIVE CONTROL: data generated WITH a direct fire -> shrub path (0.4),
+# fitted WITHOUT it. The d-sep test should reject and the indirect effect of
+# fire on birds (truth: all mediated routes) should be biased.
+params: {fire_to_shrub: 0.4}
+design:
+  model:
+    - {formula: "canopy ~ fire", family: gaussian}
+    - {formula: "shrub ~ canopy + moisture + fire", family: gaussian}
+    - {formula: "birds ~ shrub + fire", family: poisson}
+  fit_model:
+    - {formula: "canopy ~ fire", family: gaussian}
+    - {formula: "shrub ~ canopy + moisture", family: gaussian}
+    - {formula: "birds ~ shrub + fire", family: poisson}

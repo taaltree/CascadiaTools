@@ -1,0 +1,35 @@
+# Pacific marten (Martes caurina) hair-snare DNA survey, Oregon Cascades.
+# 49 baited hair snares on a 1-km grid, checked 5 times (weekly) each summer
+# for 5 summers (2020-2024); hair samples genotyped to individual.
+# Some snares were destroyed part-way through a summer (ops_<year> columns).
+# Questions: how many martens are there each year, are they declining,
+# what are survival and recruitment, and is density higher under denser canopy?
+data:
+  traps: hair_snares.csv          # one row per snare
+  trap_id_col: snare_id
+  x_col: utm_e                    # UTM easting (m)
+  y_col: utm_n                    # UTM northing (m)
+  usage_cols: [ops_2020, ops_2021, ops_2022, ops_2023, ops_2024]   # "11100" = working on checks 1-3 only
+  captures: marten_genotypes.csv  # one row per genotyped hair sample (extra columns ignored)
+  individual_col: marten_id
+  period_col: year
+  occasion_col: check             # 1..5 within each summer
+  trap_col: snare_id
+  periods: [2020, 2021, 2022, 2023, 2024]
+  n_occasions: 5
+  units: m
+  mask: habitat_grid.csv          # regular 400 m grid covering the snares + 3 km
+  density_covariates: [canopy_cover_pct]
+  labels:
+    canopy_cover_pct: "Canopy cover (%)"
+settings:
+  engine: nimble                  # nimble (default) | numpyro
+  approach: marginal              # marginal (default) | hmm | latent (nimble only)
+  compare_engines: ["numpyro", "openCR"]   # independent cross-checks on the same data
+figures:
+  labels:
+    period: "Year"
+    density_beta_canopy_cover_pct: "Canopy cover (%)"
+  per_figure:
+    coefficients: {width: onehalf, aspect: 0.35, axis: {x: "Log density ratio per SD (95% CrI)"}}
+    survival: {axis: {x: "Apparent survival between years"}}

@@ -1,0 +1,66 @@
+# Example: breeding-bird point counts (sum of birds detected in a 10-min,
+# 50-m radius count) at 60 stations in western Oregon Cascades forests of three
+# stand types. NOTE: the counts are SIMULATED with this module's simulator
+# (Gaussian niche responses to elevation and canopy cover, species-specific
+# stand-type effects, young plantations 1.4x more variable among stations),
+# so the right answers are known (example_truth.rds).
+data:
+  species: cascades_bird_counts.csv     # one row per station, one column per species (4-letter codes)
+  format: wide
+  site_col: station
+  env: cascades_stations.csv            # one row per station
+  env_vars: [elevation_m, canopy_cover_pct]
+  group: stand_type
+  partition:                            # sets for variation partitioning (one variable each here)
+    elevation_m: [elevation_m]
+    canopy_cover_pct: [canopy_cover_pct]
+  data_type: auto                       # counts -> abundance
+  labels:
+    elevation_m: "Elevation (m)"
+    canopy_cover_pct: "Canopy cover (%)"
+    stand_type: "Stand type"
+settings:
+  transform: hellinger
+  distance: bray
+  n_perm: 999
+  nmds_trymax: 50
+figures:
+  per_figure:
+    # Hutton's Vireo (5 of 60 stations) has a confidence band that runs to ~300 birds at
+    # low canopy cover where it was never seen; cap the axis so the other panels stay readable.
+    species_response_canopy_cover_pct:
+      ylim: [0, 15]
+  labels:
+    old_growth: "Old growth"
+    thinned: "Thinned"
+    young_plantation: "Young plantation"
+    PSFL: "Pacific-slope Flycatcher"
+    PAWR: "Pacific Wren"
+    HEWA: "Hermit Warbler"
+    CBCH: "Chestnut-backed Chickadee"
+    BRCR: "Brown Creeper"
+    GCKI: "Golden-crowned Kinglet"
+    VATH: "Varied Thrush"
+    SWTH: "Swainson's Thrush"
+    WIWA: "Wilson's Warbler"
+    MGWA: "MacGillivray's Warbler"
+    OCWA: "Orange-crowned Warbler"
+    SPTO: "Spotted Towhee"
+    DEJU: "Dark-eyed Junco"
+    AMRO: "American Robin"
+    RBNU: "Red-breasted Nuthatch"
+    HAWO: "Hairy Woodpecker"
+    PIWO: "Pileated Woodpecker"
+    WETA: "Western Tanager"
+    BHGR: "Black-headed Grosbeak"
+    EVGR: "Evening Grosbeak"
+    HUVI: "Hutton's Vireo"
+    CAVI: "Cassin's Vireo"
+    OSFL: "Olive-sided Flycatcher"
+    WEWP: "Western Wood-Pewee"
+    RUHU: "Rufous Hummingbird"
+    SOSP: "Song Sparrow"
+    BTYW: "Black-throated Gray Warbler"
+    TOWA: "Townsend's Warbler"
+    STJA: "Steller's Jay"
+    HETH: "Hermit Thrush"

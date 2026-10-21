@@ -1,0 +1,56 @@
+# Pine marten and red squirrel camera-trap survey: 260 woodland sites in Northern Ireland,
+# one camera per site for up to 28 days in March-April 2024 (simulated example; see TRUTH.md).
+# Question: is red squirrel occupancy associated with the NUMBER of pine martens using a site,
+# and does that association differ between native broadleaf and conifer-dominated woodland?
+data:
+  format: records                 # camera-trap exports: deployments + one row per detection
+  deployments: deployments.csv    # site, start_date, end_date (one row per deployment; several per site allowed)
+  records: records.csv            # site, date (YYYY-MM-DD or YYYY-MM-DD HH:MM:SS), species
+  site_col: site
+  start_col: start_date
+  end_col: end_date
+  date_col: date
+  species_col: species
+  date_format: "%Y-%m-%d"
+  occasion_days: 7                # camera-days are grouped into 7-day occasions
+  dominant: Pine marten           # species name exactly as in the records file
+  subordinate: Red squirrel
+  site_covs: sites.csv            # one row per site
+  coords: [easting, northing]     # optional: for the abundance map
+  site_cov_cols: [woodland_pct, broadleaf_pct, dist_settlement_km]
+  interaction_modifier: broadleaf_pct   # habitat that may change the strength of the interaction (omit for a constant interaction)
+formulas:
+  lambda: "~ woodland_pct"                 # pine marten abundance
+  r: "~ 1"                                 # pine marten detection per individual per day
+  psi: "~ woodland_pct + broadleaf_pct"    # red squirrel occupancy (marten abundance is added automatically)
+  p: "~ 1"                                 # red squirrel detection per day at occupied sites
+settings:
+  engine: nimble
+  niter: 20000
+  nburnin: 5000
+  thin: 5
+  nchains: 3
+figures:
+  labels:
+    woodland_pct: "Woodland cover within 1 km (%)"
+    # short form: the long "Broadleaf share of woodland (%)" wrapped mid-phrase in the
+    # three panel titles of interaction_by_habitat ("... (10th / pct.)")
+    broadleaf_pct: "Broadleaf share (%)"
+    dominant: "Pine marten"            # display names (default: dominant_label / subordinate_label)
+    subordinate: "Red squirrel"
+  per_figure:
+    # the default y title ("Red squirrel occupancy probability") is longer than the
+    # single-column panel height and was clipped; shorten it for this figure only
+    subordinate_vs_dominant: {axis: {y: "Red squirrel occupancy"}}
+    interaction_strength_broadleaf_pct: {axis: {x: "Broadleaf share of woodland (%)"}}
+  # Optional publication settings (see docs/FIGURES.md); uncomment to use
+  # journal: esa
+  # width: single
+  # formats: [pdf, png]
+  # ci: 0.95
+  # inner_ci: 0.5
+  # greyscale: false
+  # exclude: [trace, posterior]
+  # per_figure:
+  #   interaction_by_habitat: {width: double, aspect: 0.45}
+  #   dominant_abundance_map: {axis: {x: "Easting (km, BNG)", y: "Northing (km, BNG)"}}

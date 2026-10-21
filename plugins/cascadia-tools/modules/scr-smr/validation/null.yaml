@@ -1,0 +1,4 @@
+# False-positive rate: no habitat effect on density and no camera effect on sighting.
+params:
+  density_beta_canopy: 0
+  detection_beta_on_trail: 0

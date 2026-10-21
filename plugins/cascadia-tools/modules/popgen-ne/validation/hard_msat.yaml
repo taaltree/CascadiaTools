@@ -1,0 +1,5 @@
+# Harder design: 15 microsatellites, 30 individuals per sample, Ne = 200,
+# 3 generations between samples, 5% missing genotypes.
+params: {Ne: 200}
+design: {marker: msat, n_loci: 15, n_alleles: 10, n_ind: 30, generations_between: 3,
+         n_fullsib_pairs: 10, n_halfsib_pairs: 10, n_unrelated_pairs: 200, missing_rate: 0.05}

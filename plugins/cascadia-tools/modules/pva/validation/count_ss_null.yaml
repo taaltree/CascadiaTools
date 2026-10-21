@@ -1,0 +1,4 @@
+# State-space false-positive rate: stable population (mu = 0) with counting error
+params: {mu: 0, sigma2: 0.02, tau2: 0.02}
+design: {model: count, method: state_space, p_missing: 0.1}
+settings: {model: count, method: state_space}

@@ -1,0 +1,27 @@
+# Planted-truth check (eco-planted-truth) at the design of the Pacific marten example
+# (presence_records.csv + covariate_grid.csv, analysed with config.yaml, engine ppm).
+# Design: 60 x 60 km block of 1 km2 cells, 4 roads, elevation correlated with
+# sqrt(distance to road) at r = 0.6 (roads follow valleys), ~180 presence records
+# (the example file holds 180 marten records). Truths are the generating values of the
+# example data (dev/sdm-presence-only/make_example.R, seed 2025; example/TRUTH.txt),
+# per 1 SD of each covariate over the grid.
+# Run: scripts/ejob -c 16 -m 32 -t 3:00:00 -l logs/sdm-presence-only_si_recover.log -- scripts/Rscript core/run.R recover \
+#        sdm-presence-only --config modules/sdm-presence-only/example/recovery.yaml --nsim 200 --cores 16 \
+#        --out results/sdm-presence-only/si/recovery
+params:
+  intensity_beta_forest_cover_pct: 0.9
+  intensity_beta_elevation_m: 0.4
+  bias_beta_dist_road_km: -1.1
+  density_at_mean_covariates: 0.4   # sets the landscape; not estimable from presence-only data
+  detection_prob: 0.45              # unused without survey sites
+design:
+  nx: 60
+  ny: 60
+  cell_km: 1
+  n_presence: 180                   # expected number of records (example file: 180)
+  survey_sites: 0                   # config.yaml analyses the presence-only records alone
+  bias_habitat_cor: 0.6
+  range_km: 6
+  n_roads: 4
+settings:
+  engine: ppm

@@ -1,0 +1,35 @@
+# Fisher (Pekania pennanti) scat-detection-dog survey, western Oregon Cascades, summer 2025.
+# Four dog-handler teams searched 36 routes of 4-10 km (12 per monthly session, 3 sessions);
+# every route was logged by GPS (one fix per minute). Scats were genotyped at 12 microsatellite
+# loci; ~30% failed genotyping (blank fisher_id) and are dropped by the module.
+# Question: how many fishers live in the area, at what density, and is density higher in more
+# forested ground? Do experienced dog teams find more scats per km searched?
+data:
+  tracks: search_tracks_gps.csv        # GPS log: one row per fix
+  track_id_col: track_id
+  x_col: utm_e                         # UTM zone 10N easting (m)
+  y_col: utm_n                         # UTM zone 10N northing (m)
+  order_col: gps_time                  # fixes are joined in time order within each track
+  track_info: track_field_sheet.csv    # field sheet: one row per search route
+  occasion_col: session                # survey session (1-3)
+  samples: fisher_scats.csv            # one row per scat collected (failed genotypes included)
+  sample_id_col: scat_id
+  individual_col: fisher_id            # blank = failed genotype (dropped)
+  sample_track_col: track_id           # route on which the scat was found
+  mask: habitat_grid.csv               # 700 m pixels covering the searched area + 6 km
+  mask_x_col: utm_e
+  mask_y_col: utm_n
+  units: m
+  cell_size: 1000                      # detector cells 1 km x 1 km (about 2/3 sigma)
+  density_covariates: [forest_pct]
+  detection_covariates: [experienced_team]   # from the field sheet (1 = experienced dog team)
+  labels:
+    forest_pct: "Forest cover (%)"
+    experienced_team: "Experienced dog team"
+settings:
+  engine: nimble                       # nimble (Bayesian, default) | secr_cells | secr_transect
+  compare_engines: [secr_cells]        # ML fit of the same cell model as a check (secr_transect also possible but takes ~25 min)
+figures:                               # presentation only (docs/FIGURES.md)
+  per_figure:
+    density_expected_surface: {width: onehalf}   # long legend title squeezed the map at single width and overlapped the x ticks
+    coefficients: {xlim: [-0.1, 1.6]}            # keeps the last x tick label (1.5) inside the panel

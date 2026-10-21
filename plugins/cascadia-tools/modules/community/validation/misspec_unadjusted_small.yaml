@@ -1,0 +1,3 @@
+# Same misspecification at 24 sites, where the bias is larger
+design: {n_sites: 24, n_groups: 2}
+settings: {r2: unadjusted}

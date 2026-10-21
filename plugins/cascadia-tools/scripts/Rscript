@@ -1,0 +1,11 @@
+#!/bin/bash
+# Run R for CascadiaTools. Uses CASCADIATOOLS_R if set; otherwise the lab
+# cluster's R 4.5.3 if present; otherwise the Rscript on your PATH (R >= 4.5).
+here="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+export CASCADIATOOLS_ROOT="${CASCADIATOOLS_ROOT:-${ECOTOOLS_ROOT:-$here}}"
+if [[ -n "$CASCADIATOOLS_R" ]]; then R_BIN="$CASCADIATOOLS_R"
+elif [[ -x /local/cqls/R/R-4.5.3/Rscript ]]; then R_BIN=/local/cqls/R/R-4.5.3/Rscript
+else R_BIN="$(command -v Rscript)"; fi
+if [[ -z "$R_BIN" ]]; then echo "R not found: install R 4.5+ from https://cran.r-project.org" >&2; exit 127; fi
+[[ -d "$CASCADIATOOLS_ROOT/Rlib" ]] && export R_LIBS_USER="$CASCADIATOOLS_ROOT/Rlib"
+exec "$R_BIN" "$@"

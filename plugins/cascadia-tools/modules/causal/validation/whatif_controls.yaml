@@ -1,0 +1,4 @@
+# NEGATIVE CONTROLS (built in): every what-if strategy is scored against the TRUE causal effect.
+# Strategies the DAG calls valid should PASS; omitted confounders, mediators, colliders should FAIL.
+design: {whatif_truth: true}
+settings: {whatif: true}

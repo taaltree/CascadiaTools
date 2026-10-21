@@ -1,0 +1,24 @@
+{
+  "name": "cascadia-tools",
+  "displayName": "CascadiaTools",
+  "version": "0.1.0",
+  "description": "Validated analysis modules and protocols for ecology, wildlife, fisheries and conservation genetics: planted-truth checks, power analysis, biological interpretation and publication figures.",
+  "author": {
+    "name": "Taal Levi, Cascadia Wildlife Lab",
+    "url": "https://cascadiawildlifelab.org"
+  },
+  "homepage": "https://cascadiawildlifelab.org/tools/",
+  "repository": "https://github.com/taaltree/CascadiaTools",
+  "license": "MIT",
+  "keywords": [
+    "ecology",
+    "wildlife",
+    "fisheries",
+    "conservation genetics",
+    "occupancy",
+    "spatial capture-recapture",
+    "nimble",
+    "power analysis",
+    "R"
+  ]
+}

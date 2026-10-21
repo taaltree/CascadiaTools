@@ -1,0 +1,32 @@
+# Jolly-Seber example: western pond turtles (Actinemys marmorata), PIT-tagged
+# and hoop-trapped every summer 2015-2022 at one pond complex. The data are
+# simulated from known truth (see TRUTH.txt) in the format field crews keep.
+#
+#   scripts/Rscript core/run.R fit jolly-seber --config modules/jolly-seber/example/config.yaml --out results/jolly-seber/example
+data:
+  species: western pond turtles
+  captures: turtle_captures.csv      # one row per capture event
+  id_col: turtle_id
+  occasion_col: season               # the primary occasion each capture belongs to
+  group_col: sex                     # optional; U / blank = unknown sex
+  group_recode: {F: female, M: male}
+  group_levels: [female, male]       # reference level first
+  group_name: sex
+  occasions: turtle_seasons.csv      # one row per season, including any with no captures
+  occasion_key: season
+  detection_covariates: [trap_nights]
+  time_unit: year
+  labels:
+    trap_nights: Trapping effort (trap-nights)
+settings:
+  detection: auto                    # constant + listed detection covariates
+  survival: constant                 # or: time
+  compare_engines: [marked]          # independent ML POPAN fit shown alongside
+figures:
+  show_data: true
+  labels:
+    trap_nights: "Trapping effort (trap-nights)"
+    animals: "turtles"
+    superpopulation_size: "Superpopulation size (turtles ever present)"
+  per_figure:
+    abundance_trajectory: {axis: {"y": "Turtles present (N)"}}

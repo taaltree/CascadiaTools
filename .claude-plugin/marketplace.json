@@ -1,0 +1,16 @@
+{
+  "name": "cascadia",
+  "owner": {
+    "name": "Cascadia Wildlife Lab",
+    "url": "https://cascadiawildlifelab.org"
+  },
+  "description": "CascadiaTools: validated ecological analysis for AI coding agents",
+  "plugins": [
+    {
+      "name": "cascadia-tools",
+      "source": "./plugins/cascadia-tools",
+      "description": "Validated ecological, wildlife, fisheries and conservation-genetic analyses",
+      "category": "science"
+    }
+  ]
+}

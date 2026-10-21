@@ -1,0 +1,2 @@
+params:
+  sel_mean: {forest: 0.8, elevation: -0.25}

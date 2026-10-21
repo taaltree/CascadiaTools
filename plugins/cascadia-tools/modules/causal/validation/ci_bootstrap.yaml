@@ -1,0 +1,2 @@
+# CI method comparison: nonparametric bootstrap (200 resamples).
+settings: {whatif: false, ci_method: bootstrap, n_boot: 200}

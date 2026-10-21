@@ -1,0 +1,3 @@
+# 200 SNPs, island model, 6 demes x 20 individuals (for interval-method comparison)
+params: {m: 0.05}
+design: {model: island, n_pops: 6, n_loci: 200, n_ind: 20, marker: snp, missing_rate: 0.05}

@@ -1,0 +1,3 @@
+# Zero-inflated NB GLMM, 20% structural zeros, theta 2
+params: {zi_prob: 0.2, dispersion: 2}
+design: {family: zinb}

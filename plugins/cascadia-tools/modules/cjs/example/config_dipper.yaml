@@ -1,0 +1,20 @@
+# European dipper (Cinclus cinclus), eastern France 1981-1987: the classic CJS data set of
+# Lebreton et al. (1992), here as a long table of captures (bird, year, sex). A flood in 1982-83
+# (affecting the 1982->1983 and 1983->1984 survival intervals in marked's convention, i.e. the
+# intervals starting 1982 and 1983) is a known cause of low survival. Use it to check the module
+# against published estimates (phi ~ 0.61 normal years, ~ 0.47 flood years; p ~ 0.90).
+data:
+  species: European dippers
+  format: long
+  captures: dipper_captures.csv
+  id_col: bird_id
+  occasion_col: year
+  group_col: sex
+  individual_covs: []
+  occasion_covs: dipper_years.csv
+  occasion_cov_col: year
+formulas:
+  phi: "~ flood"
+  p: "~ 1"
+settings:
+  engine: marked

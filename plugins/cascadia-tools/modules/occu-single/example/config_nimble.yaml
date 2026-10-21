@@ -1,0 +1,17 @@
+# Pileated woodpecker call-broadcast surveys: 120 forest stands, up to 4 visits in May-June 2025.
+# Question: is occupancy associated with forest cover and elevation, allowing for imperfect detection?
+data:
+  model: static                # static = single season; dynamic = several seasons (see config_dynamic.yaml)
+  detections: detections.csv   # one row per survey done
+  format: long
+  site_col: site
+  survey_col: survey           # visit number within the site: 1, 2, 3, ...
+  detection_col: detected      # 1 = detected, 0 = not detected
+  obs_covs: [julian_day, observer]   # survey-level covariates (columns of detections.csv)
+  site_covs: sites.csv         # one row per site
+formulas:
+  psi: "~ forest_cover_pct + elevation_m"   # occupancy
+  p: "~ julian_day + observer"              # detection per survey
+settings:
+  engine: nimble
+  gof_nboot: 1   # >0 turns on the posterior predictive check

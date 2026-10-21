@@ -1,0 +1,35 @@
+# Lake Erie walleye, autumn 2014 gill-net survey: do females and males differ
+# in growth and condition? (Data: FSAdata::WalleyeErie2, Ohio DNR; educational use only.)
+data:
+  file: walleye_lake_erie.csv
+  fish_id: fish_id
+  age: age              # otolith age (years)
+  length: tl_mm         # total length
+  weight: wt_g          # optional; blank = not weighed
+  group: sex            # compare groups (sex, lake, year...); omit for one group
+  reference_group: female
+  filter: {year: 2014}  # keep only these rows
+  age_offset: 0.5       # fish were caught in Oct-Nov, about half a year after the spring hatch
+  length_units: mm
+  weight_units: g
+  reference_length: 500 # report mean weight of a 500 mm fish
+  standard_weight: {species: Walleye, group: overall, units: metric}   # Ws from FSA::WSlit (Murphy et al. 1990)
+settings:
+  engine: nls           # nls (Kimura LRT) | nimble (Bayesian)
+  error: multiplicative # multiplicative (lognormal) | additive
+figures:                # all optional; see docs/FIGURES.md and README "Figures"
+  journal: cjfas        # sets widths and font size
+  width: single
+  formats: [pdf, png]
+  ci: 0.95              # band / interval level
+  show_data: true       # plot individual fish
+  greyscale: false      # true = print-safe greys (groups also differ by symbol and line type)
+  labels:
+    female: "Female"
+    male: "Male"
+    length: "Total length (mm)"
+    weight: "Wet weight (g)"
+    condition: "Relative weight (Wr)"
+  # include: [growth_curves, length_weight]
+  per_figure:
+    parameter_comparison: {width: double}

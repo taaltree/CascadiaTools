@@ -1,0 +1,4 @@
+# Default design, but truth = exact expectation over replicate histories (identity recursion):
+# shows the estimators are unbiased for the theoretical parameter; coverage is NOT expected to be
+# nominal here (intervals describe these populations, not replicate histories).
+design: {truth: expected}

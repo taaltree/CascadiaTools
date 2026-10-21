@@ -1,0 +1,56 @@
+# Does riparian canopy cover increase juvenile trout abundance?
+# 140 stream reaches, one electrofishing pass each (trout per 100 m reach),
+# with habitat variables measured at the same reaches.
+data:
+  file: stream_trout_reaches.csv
+  # Causal assumptions (DAG). Node names = column names. Each arrow is a
+  # claimed direct cause; each MISSING arrow is a claim of no direct effect.
+  dag: |
+    dag {
+      elevation_m -> canopy_pct
+      elevation_m -> water_temp_c
+      agriculture_pct -> canopy_pct
+      agriculture_pct -> fine_sediment_pct
+      fine_sediment_pct -> trout_per_reach
+      wetted_width_m -> canopy_pct
+      wetted_width_m -> trout_per_reach
+      canopy_pct -> water_temp_c
+      water_temp_c -> trout_per_reach
+      canopy_pct -> trout_per_reach
+      canopy_pct -> periphyton_chla
+      trout_per_reach -> periphyton_chla
+    }
+  exposure: canopy_pct
+  outcome: trout_per_reach
+  family: negbin            # overdispersed counts
+  contrast: 10              # report the effect of +10 percentage points of canopy
+  effect: both              # total effect and controlled direct effect (not via water temperature)
+  labels:
+    canopy_pct: riparian canopy cover
+    trout_per_reach: juvenile trout per 100 m reach
+    elevation_m: elevation
+    agriculture_pct: agricultural land in catchment
+    fine_sediment_pct: fine sediment
+    wetted_width_m: wetted width
+    water_temp_c: August water temperature
+    periphyton_chla: periphyton chlorophyll-a
+  unit_text:
+    canopy_pct: percentage points
+  response_label: juvenile trout per 100 m reach
+settings:
+  ci_method: unconditional
+# Publication figures (see modules/causal/README.md "Figures" and docs/FIGURES.md).
+# Ids: dag, effect, adjustment_comparison, implied_independencies, residuals.
+figures:
+  journal: esa              # widths and font size; generic | esa | besjournals | ...
+  formats: [pdf, png]
+  ci: 0.95                  # level for effect band, what-if and local-test intervals
+  greyscale: false
+  labels:
+    canopy_pct: "Riparian canopy cover (%)"        # also used on DAG nodes and what-if rows
+    trout_per_reach: "Juvenile trout per 100 m reach"
+    effect_y: "Expected juvenile trout per 100 m reach"
+    whatif_biased: "Biased by the DAG"
+  per_figure:
+    effect: {aspect: 0.75}
+    # dag: {width: onehalf}

@@ -1,0 +1,3 @@
+# Arnason-Schwarz variant: every detected animal's state is recorded.
+design:
+  model: AS

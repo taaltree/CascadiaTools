@@ -1,0 +1,3 @@
+# Beta GLMM (proportions), 30 groups x 8
+params: {beta_intercept: -0.5, beta_forest: 0.3, beta_temp: -0.2, beta_habitat_riparian: 0.3, beta_habitat_wetland: -0.3, dispersion: 15, re_sd: 0.3}
+design: {family: beta, offset: null, response: cover}

@@ -1,0 +1,36 @@
+# Does warmer sea-surface temperature change intertidal snail counts?
+# 24 permanent sites counted every summer 2019-2024 (site x year rows).
+# Site quality (substrate, wave exposure, recruitment supply) and year-wide
+# conditions are NOT measured but plausibly affect both temperature and
+# snails, so a within-site, within-year (two-way fixed effects) estimator is used
+# (Byrnes & Dee 2025).
+data:
+  file: snail_panel.csv
+  dag: |
+    dag {
+      site_quality [latent]
+      year_conditions [latent]
+      site_quality -> sst_c
+      site_quality -> snail_count
+      year_conditions -> sst_c
+      year_conditions -> snail_count
+      upwelling_index -> sst_c
+      upwelling_index -> snail_count
+      sst_c -> snail_count
+    }
+  exposure: sst_c
+  outcome: snail_count
+  family: poisson
+  contrast: 1               # +1 degree C
+  panel: twoway             # site and year fixed effects
+  unit: site
+  time: year
+  unit_constant: [site_quality]
+  time_constant: [year_conditions]
+  labels:
+    sst_c: summer sea-surface temperature
+    snail_count: snails per quadrat set
+    upwelling_index: upwelling index
+  unit_text:
+    sst_c: deg C
+  response_label: snails per quadrat set

@@ -1,0 +1,22 @@
+# Chorus-frog calling surveys at 80 ponds, 2021-2025, up to 3 visits each spring.
+# Question: how do occupancy, colonisation and local extinction relate to pond size,
+# surrounding forest and spring precipitation, and did the proportion of ponds occupied change?
+data:
+  model: dynamic
+  detections: dynamic_detections.csv
+  format: long
+  site_col: pond
+  season_col: year             # primary period (season / year)
+  survey_col: visit            # visit number within pond-year: 1, 2, 3
+  detection_col: heard
+  obs_covs: [water_temp_c]
+  site_covs: dynamic_ponds.csv          # pond, wetland_area_ha, forest_500m_pct
+  season_covs: dynamic_pond_years.csv   # pond, year, spring_precip_mm (year t value -> change from t to t+1)
+formulas:
+  psi: "~ log(wetland_area_ha)"   # initial occupancy (first year)
+  col: "~ forest_500m_pct"        # colonisation between years
+  ext: "~ spring_precip_mm"       # local extinction between years
+  p: "~ water_temp_c"             # detection per visit
+settings:
+  engine: unmarked
+  gof_nboot: 200

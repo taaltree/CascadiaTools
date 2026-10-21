@@ -1,0 +1,3 @@
+# Strong, long gradient (narrow niches: unimodal responses, high turnover) and 90 sites
+params: {tol1: 0.1, tol2: 0.25}
+design: {n_sites: 90}

@@ -1,0 +1,3 @@
+# 1-D stepping stone (e.g. a river), IBD on linear distance
+params: {m: 0.1}
+design: {model: stepping_stone_1d, n_pops: 8, spacing_km: 10, ibd_distance: linear}

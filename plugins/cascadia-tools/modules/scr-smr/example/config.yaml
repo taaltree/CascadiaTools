@@ -1,0 +1,55 @@
+# Fisher (Pekania pennanti) generalized spatial mark-resight study, western
+# Oregon Cascades, 2025 (simulated data in real field formats).
+# Marking: 25 box traps (1.5 km grid) run for 5 nights in May; every fisher
+#   caught was ear-tagged (coloured, numbered tags); 9 also got GPS collars.
+# Resighting: 49 baited cameras (1.5 km grid) for 10 weeks in June-August.
+#   Each photo event is scored "ear-tag read" (fisher_id known), "ear-tag,
+#   number unreadable" (marked but identity unknown) or "no tag".
+# Questions: how many fishers live here (density per km2), does density rise
+#   with canopy cover, and do trail cameras photograph fishers more often?
+# The box traps sat in the middle of the camera grid, so tagged fishers are
+#   NOT a random sample of the area: the marking process must be modelled
+#   (generalized SMR; Whittington et al. 2018).
+data:
+  species: fishers
+  units: m
+  cameras: cameras.csv
+  camera_id_col: camera_id
+  x_col: utm_e
+  y_col: utm_n
+  usage_col: weeks_active          # "1111111000": camera working (1) or not (0) each week
+  detection_covariates: [on_trail] # camera on a skid road / trail (1) or not (0)
+  sightings: fisher_photos.csv     # one row per independent photo event
+  camera_col: camera_id
+  occasion_col: week
+  status_col: tag_status
+  marked_values: ["ear-tag read"]
+  unmarked_values: ["no tag"]
+  unidentified_values: ["ear-tag, number unreadable"]
+  animal_col: fisher_id
+  marking_traps: box_traps.csv     # gSMR: where marking happened
+  marking_trap_id_col: trap_id
+  marking_occasions: 5             # trap nights
+  marking_captures: box_trap_captures.csv
+  marking_animal_col: fisher_id
+  marking_occasion_col: night
+  marking_trap_col: trap_id
+  telemetry: gps_fixes.csv         # GPS fixes of collared (tagged) fishers
+  telemetry_animal_col: fisher_id
+  telemetry_x_col: utm_e
+  telemetry_y_col: utm_n
+  mask: habitat_grid.csv           # regular 500 m grid of pixel centres, cameras + 4 km
+  habitat_col: habitat
+  density_covariates: [canopy_cover_pct]
+  labels:
+    canopy_cover_pct: "Canopy cover (%)"
+    on_trail: "Camera on trail"
+settings:
+  model: gsmr                      # auto | smr | gsmr
+  resight_model: poisson           # poisson (counts of photo events) | bernoulli (detected or not per week)
+  compare_engines: [secr]          # independent maximum-likelihood cross-check
+figures:
+  labels:
+    on_trail: "on trail"           # panel strips read "Camera, on trail = 0/1"
+  per_figure:
+    marked_fraction: {xlim: [0, 0.6]}   # posterior sits near 0.27; drop the empty 0.6-1 range

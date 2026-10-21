@@ -1,0 +1,6 @@
+# Negative control: the same gSMR data (spatially concentrated marking) fitted
+# with conventional SMR, i.e. marked animals treated as a random sample.
+design:
+  model: gsmr
+settings:
+  model: smr

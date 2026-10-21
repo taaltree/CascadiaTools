@@ -1,0 +1,7 @@
+# Overdispersed counts (negative binomial, theta = 2), 100 plots.
+params: {theta_birds: 2}
+design:
+  model:
+    - {formula: "canopy ~ fire", family: gaussian}
+    - {formula: "shrub ~ canopy + moisture", family: gaussian}
+    - {formula: "birds ~ shrub + fire", family: nbinom}

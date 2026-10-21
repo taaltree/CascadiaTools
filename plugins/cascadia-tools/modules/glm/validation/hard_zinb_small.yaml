@@ -1,0 +1,3 @@
+# HARD: zero-inflated NB with 100 observations, no random effect
+params: {zi_prob: 0.3, dispersion: 1}
+design: {family: zinb, n_groups: 0, n: 100}

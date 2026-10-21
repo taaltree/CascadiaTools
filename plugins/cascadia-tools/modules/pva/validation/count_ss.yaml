@@ -1,0 +1,4 @@
+# State-space: process sigma2=0.02 + counting error tau2=0.02, 10% of years missing, REML EGSS fit
+params: {sigma2: 0.02, tau2: 0.02}
+design: {model: count, method: state_space, p_missing: 0.1}
+settings: {model: count, method: state_space}

@@ -1,0 +1,2 @@
+# Default design analysed as presence/absence (Hellinger of 0/1; Sorensen-based PERMANOVA)
+design: {data_type: presence}

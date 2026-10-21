@@ -1,0 +1,19 @@
+# Hatching success: number of eggs hatched out of eggs laid, nests nested in colonies.
+data:
+  file: nest_hatching.csv
+  formula: eggs_hatched ~ nest_height_m + dist_edge_m + predator_guard + (1|colony)
+  family: binomial
+  trials: eggs_laid            # successes/trials data: eggs_hatched out of eggs_laid
+  units:
+    nest_height_m: 1
+    dist_edge_m: 50
+  unit_text:
+    nest_height_m: m
+    dist_edge_m: m
+  labels:
+    nest_height_m: nest height (m)
+    dist_edge_m: distance to forest edge (m)
+    predator_guard: predator guard
+  reference:
+    predator_guard: "no"
+  response_label: an egg hatching

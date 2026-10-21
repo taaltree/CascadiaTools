@@ -1,0 +1,25 @@
+# Planted-truth check at the example study's own design (eco-planted-truth, eco-analyze step 5).
+# Design matches the example data as read by read_data(): 260 sites, 4 occasions of 7 camera-days,
+# 8.9% of site-occasions with lost camera-days (3.0% with none). Values are the TRUE values used to
+# simulate the example (dev/abund-interactions/make_example.R, seed 2024; example/TRUTH.md).
+# Run:
+#   scripts/ejob -c 16 -m 32 -t 3:00:00 -l logs/abund-interactions_si_recover.log -- \
+#     scripts/Rscript core/run.R recover abund-interactions \
+#     --config modules/abund-interactions/example/recovery.yaml --nsim 100 --cores 16 \
+#     --out results/abund-interactions/si/recovery
+design:
+  n_sites: 260
+  n_occasions: 4
+  days_per_occasion: 7
+  prop_effort_loss: 0.09
+  habitat_interaction: true
+params:
+  dominant_abundance: 1.0                         # pine martens per site at average woodland
+  lambda_beta_woodland: 0.5                       # log-abundance slope per SD woodland cover
+  dominant_detection_per_individual: 0.08         # daily detection of one marten
+  subordinate_occupancy_no_dominant: 0.6          # red squirrel occupancy with no marten, average habitat
+  psi_beta_woodland: 0.5                          # logit slope per SD woodland cover
+  psi_beta_broadleaf: 0.3                         # logit slope per SD broadleaf share
+  psi_beta_dominant_abundance: -0.6               # gamma0: logit change per marten at average broadleaf share
+  psi_beta_dominant_abundance_x_broadleaf: 0.6    # gamma1: change in gamma per SD broadleaf share
+  subordinate_detection: 0.15                     # daily detection of red squirrel at occupied sites

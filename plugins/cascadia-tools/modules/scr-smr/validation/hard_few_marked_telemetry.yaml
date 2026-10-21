@@ -1,0 +1,8 @@
+# Harder design + remedy: 5 marked animals of ~40 (density 0.14 per km2), all 5
+# GPS-collared with 30 independent fixes each (Sollmann et al. 2013).
+params:
+  density: 0.14
+design:
+  n_marked: 5
+  telemetry_fixes: 30
+  telemetry_fraction: 1

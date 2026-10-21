@@ -1,0 +1,17 @@
+# Stock-recruitment: sockeye salmon brood table (escapement and total adult recruits, thousands of fish).
+# Question: what spawning escapement maximises sustainable yield, and what harvest rate goes with it?
+settings:
+  model: stock_recruit
+  sr_form: ricker                  # ricker | beverton_holt
+  sr_engine: nimble                # ls (least squares, fast) | nimble (Bayesian; allows AR(1) residuals)
+  ar1: true                        # autocorrelated recruitment residuals (nimble only)
+  spr0: 1                          # recruits are adult returns in spawner units (salmon convention)
+data:
+  file: sockeye_brood_table.csv
+  year_col: brood_year
+  spawners_col: escapement_thousands
+  recruits_col: total_recruits_thousands
+  species: sockeye salmon
+  spawner_units: thousand fish
+figures:
+  journal: cjfas

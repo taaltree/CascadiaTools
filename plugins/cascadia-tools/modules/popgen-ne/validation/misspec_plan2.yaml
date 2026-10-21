@@ -1,0 +1,4 @@
+# NEGATIVE CONTROL (mis-specified model): individuals sampled non-lethally from a
+# census of N = Ne = 100 (plan I), but the census size is withheld so the
+# temporal method uses the plan II correction. Should FAIL for het_loss_temporal.
+design: {census_known: false}

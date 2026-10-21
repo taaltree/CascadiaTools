@@ -1,0 +1,2 @@
+# Island model (no isolation by distance): ibd_slope truth = 0 -> false-positive rate of the IBD slope CI
+design: {model: island}

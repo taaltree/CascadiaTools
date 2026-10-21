@@ -1,0 +1,35 @@
+# Hermit warbler point counts: 120 points in the Oregon Coast Range, up to 3 visits (mid-May to mid-June 2025).
+# Question: how many warblers are there, and is abundance associated with canopy cover and elevation,
+# allowing for birds that are present but not counted?
+data:
+  model: static                  # static = closed population within the season; dynamic = several seasons (config_dynamic.yaml)
+  species: Hermit warblers
+  counts: point_counts.csv       # one row per visit done
+  format: long
+  site_col: point
+  visit_col: visit               # visit number within the point: 1, 2, 3
+  count_col: count               # number of individuals counted on that visit
+  obs_covs: [julian_day, wind_beaufort, observer]   # visit-level covariates (columns of point_counts.csv)
+  site_covs: points.csv          # one row per point
+formulas:
+  lambda: "~ canopy_cover_pct + elevation_m"        # expected abundance per point (log link)
+  p: "~ wind_beaufort + julian_day + observer"      # detection per individual per visit (logit link)
+settings:
+  engine: unmarked
+  mixture: P                     # P, NB or ZIP; the report compares all three by AIC
+  gof_nboot: 300
+figures:                         # optional; see skills/eco-figures and the module README "Figures"
+  journal: esa                   # sets widths and font size
+  width: single
+  formats: [pdf, png]
+  ci: 0.95                       # outer band / interval
+  inner_ci: 0.5                  # inner band / thick bar
+  # include: [abundance_canopy_cover_pct, detection_wind_beaufort, total_abundance]
+  # greyscale: true
+  # per_figure: {coefficients: {width: onehalf}}
+  labels:
+    canopy_cover_pct: "Canopy cover (%)"
+    elevation_m: "Elevation (m)"
+    wind_beaufort: "Wind (Beaufort)"
+    julian_day: "Day of year"
+    observer: "Observer"

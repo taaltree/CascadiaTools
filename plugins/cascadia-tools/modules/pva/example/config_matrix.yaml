@@ -1,0 +1,34 @@
+# Matrix PVA from vital-rate estimates (e.g. outputs of a CJS / IPM analysis): illustrative
+# 3-stage female-only, pre-breeding-census model of a long-lived bird.
+# Question: what is the 50-year quasi-extinction risk, which vital rates matter most for growth,
+# and how much would each management option reduce risk?
+settings:
+  model: matrix
+  threshold: 30                # quasi-extinction: 30 or fewer adult females (count_stages below)
+  horizons: [10, 25, 50]
+  demographic: true            # binomial survival / Poisson births (important at small N)
+  n_param_draws: 400           # sets of vital rates drawn from their sampling uncertainty
+  n_traj_per_draw: 250         # trajectories per set
+  n_traj_point: 10000          # trajectories at the point estimates
+  scenarios:                   # management options; multiply or add to MEAN vital rates
+    - name: Juvenile survival +10%
+      multiply: {s_juv: 1.10}
+    - name: Adult survival +0.02
+      add: {s_ad: 0.02}
+    - name: Predator exclosures (fecundity +20%)
+      multiply: {fec: 1.20}
+data:
+  vital_rates: vital_rates.csv # columns: rate, type (survival|fecundity), mean, se, sd_env, n_years [, sampling_var, dist, min, max]
+  stages: [juvenile, subadult, adult]
+  matrix:                      # rows = stage next year, columns = stage this year; entries are formulas in the rates
+    - ["0",     "b_sub * fec * s_juv", "fec * s_juv"]
+    - ["s_sub", "0",                   "0"]
+    - ["0",     "s_ad",                "s_ad"]
+  initial_abundance: {juvenile: 40, subadult: 30, adult: 110}
+  count_stages: [adult]        # which stages count towards the threshold and the ceiling
+  ceiling: 300                 # ceiling density dependence on the counted stages (omit for none)
+  env_correlation: 0.3         # within-year correlation among all vital rates (or a CSV correlation matrix)
+  species: the illustrative long-lived bird population
+  units: adult females
+figures:
+  journal: esa

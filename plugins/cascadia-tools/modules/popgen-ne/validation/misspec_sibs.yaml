@@ -1,0 +1,4 @@
+# NEGATIVE CONTROL (mis-specified sample): 20 full-sib families (40 juveniles)
+# are added to the late sample AND used for Ne. Family over-representation
+# should bias LD Ne downward (het_loss_LD_late upward): should FAIL.
+design: {n_fullsib_pairs: 20, n_halfsib_pairs: 0, panel_in_ne: true}

@@ -1,0 +1,29 @@
+# Example: forest breeding birds (SIMULATED data) at 120 point-count stations.
+# Question: how do species respond to summer temperature and canopy cover,
+# does body size explain who responds how, and which species co-occur more
+# or less than the habitat predicts?
+data:
+  community: bird_detections.csv   # long format: one row per detection record
+  format: long
+  site_col: station
+  species_col: species
+  value_col: count                 # summed over visits, then turned into detected / not detected
+  response: presence               # presence (probit) or count (lognormal Poisson)
+  sites: stations.csv
+  covariates: [july_temp_c, canopy_cover_pct]
+  traits: bird_traits.csv
+  trait_formula: "~ log(body_mass_g)"
+  taxonomy: [order, family]        # taxonomic tree used as the phylogenetic correlation
+  label_col: common                # species labels in figures/text
+  x_col: utm_e
+  y_col: utm_n
+  coord_units: m
+  min_occurrences: 3
+figures:
+  labels:
+    july_temp_c: "July mean max. temperature (°C)"
+    canopy_cover_pct: "Canopy cover (%)"
+    log_body_mass_g: "Body mass (log g)"
+  per_figure:
+    # keep the "100" tick label inside each facet (otherwise it runs into the next panel)
+    occurrence_canopy_cover_pct: {xlim: [0, 110]}

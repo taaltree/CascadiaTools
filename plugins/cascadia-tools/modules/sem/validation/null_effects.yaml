@@ -1,0 +1,3 @@
+# FALSE-POSITIVE control: direct fire -> birds = 0 and moisture -> shrub = 0
+# (so the indirect moisture -> birds effect is 0 too). Default design otherwise.
+params: {fire_to_birds: 0, moisture_to_shrub: 0}

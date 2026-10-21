@@ -1,0 +1,2 @@
+# NEGATIVE CONTROL: site-level random effect ignored (pseudoreplication of a site-level covariate)
+settings: {drop_random: true}

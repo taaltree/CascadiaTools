@@ -1,0 +1,3 @@
+# Default design: 25 annual counts, N0=500, mu=-0.03, sigma2=0.03, no counting error, diffusion fit
+design: {model: count}
+settings: {model: count, method: diffusion}
