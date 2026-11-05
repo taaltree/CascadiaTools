@@ -8,13 +8,17 @@
 # power_analysis(): run_recovery over a grid of designs or effect sizes and
 # return power curves.
 #
-# Replicates run in parallel with forked workers (parallel::mclapply). Each
+# Replicates run in parallel with forked workers (parallel::mclapply), or socket
+# workers on Windows, where forking does not exist. Each
 # replicate gets seed = base_seed + rep, so any single replicate can be
 # rerun exactly with module$simulate(params, design, seed).
 
 run_recovery <- function(module, params = NULL, design = NULL, nsim = 50,
                          settings = NULL, cores = 1, seed = 1,
                          outdir = NULL, label = NULL, verbose = TRUE) {
+  # Socket workers receive `one` with this environment, so nothing here can stay an unevaluated
+  # promise that refers to the caller.
+  force(nsim); force(cores); force(seed); force(outdir); force(label); force(verbose)
   params <- merge_list(module$defaults$params, params)
   design <- merge_list(module$defaults$design, design)
   settings <- merge_list(module$fast_settings, settings)
@@ -44,8 +48,9 @@ run_recovery <- function(module, params = NULL, design = NULL, nsim = 50,
                                  if (!is.na(out$error[1])) paste0(" ERROR: ", out$error[1]) else ""))
     out
   }
-  reps <- if (cores > 1) parallel::mclapply(seq_len(nsim), one, mc.cores = cores,
+  reps <- if (cores > 1 && eco_can_fork()) parallel::mclapply(seq_len(nsim), one, mc.cores = cores,
                                             mc.preschedule = TRUE)  # one fork per core, so compiled models are reused across reps
+          else if (cores > 1) eco_psock_lapply(seq_len(nsim), one, cores)
           else lapply(seq_len(nsim), one)
   bad <- vapply(reps, function(x) !is.data.frame(x), logical(1))
   if (any(bad)) reps[bad] <- lapply(which(bad), function(r)

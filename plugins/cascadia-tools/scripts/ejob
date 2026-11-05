@@ -17,7 +17,9 @@ while [[ $1 != "--" && $# -gt 0 ]]; do
 done
 shift
 root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-[[ -z $log ]] && log=$root/logs/ejob_$(date +%Y%m%d_%H%M%S)_$$.log
+# Logs go in the folder ejob is called from: the toolkit may be read-only, and a plugin update replaces it.
+[[ -z $log ]] && log=$PWD/logs/ejob_$(date +%Y%m%d_%H%M%S)_$$.log
+mkdir -p "$(dirname "$log")"
 th=${ECO_THREADS:-1}
 # No SLURM (a laptop or workstation): run here, same environment, same log.
 if ! command -v sbatch >/dev/null 2>&1; then

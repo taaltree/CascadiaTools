@@ -281,7 +281,7 @@ ssf_home_ranges <- function(data, st) {
   }
   ids <- unique(fx$id)
   nc <- max(1, as.integer(st$cores %||% 1))
-  res <- if (nc > 1) parallel::mclapply(ids, one, mc.cores = nc) else lapply(ids, one)
+  res <- if (nc > 1 && eco_can_fork()) parallel::mclapply(ids, one, mc.cores = nc) else lapply(ids, one)
   list(table = do.call(rbind, lapply(res, `[[`, "row")), polygons = do.call(rbind, lapply(res, `[[`, "pol")), level = lev)
 }
 

@@ -5,8 +5,8 @@ authors:
   - family-names: Levi
     given-names: Taal
     affiliation: "Cascadia Wildlife Lab, Oregon State University"
-version: 0.1.0
-date-released: 2026-10-21
+version: 0.2.1
+date-released: 2026-11-04
 license: MIT
 repository-code: "https://github.com/taaltree/CascadiaTools"
 url: "https://cascadiawildlifelab.org/tools/"

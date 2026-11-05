@@ -121,13 +121,8 @@ nm_gof <- function(eng, des, settings) {
   # Forked workers hang in unmarked::pcountOpen (threaded C++ code initialised in the parent;
   # diagnosed with dev/nmixture/test_gof_dyn.R), so the dynamic model uses socket workers.
   bs <- if (ncores <= 1) lapply(seq_len(nb), one)
-        else if (des$model == "dynamic") {
-          cl <- parallel::makeCluster(min(ncores, nb)); on.exit(parallel::stopCluster(cl), add = TRUE)
-          parallel::clusterCall(cl, function(lp, root) {   # core helpers live in globalenv; the module env travels with `one`
-            .libPaths(lp); Sys.setenv(OMP_NUM_THREADS = "1", OPENBLAS_NUM_THREADS = "1", ECOTOOLS_ROOT = root)
-            source(file.path(root, "core", "load.R")); NULL }, .libPaths(), eco_root())
-          parallel::parLapply(cl, seq_len(nb), one)
-        } else parallel::mclapply(seq_len(nb), one, mc.cores = ncores)
+        else if (des$model == "dynamic" || !eco_can_fork()) eco_psock_lapply(seq_len(nb), one, ncores)
+        else parallel::mclapply(seq_len(nb), one, mc.cores = ncores)
   bs <- do.call(rbind, bs); bs <- bs[stats::complete.cases(bs), , drop = FALSE]
   list(method = "parametric bootstrap", nboot = nrow(bs), chisq_obs = obs[["chisq"]], chisq_rep = bs[, 1],
        ft_obs = obs[["ft"]], ft_rep = bs[, 2], c_hat = obs[["chisq"]] / mean(bs[, 1]),
