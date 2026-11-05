@@ -280,3 +280,36 @@ present; the effect and transient-LTRE PNGs were inspected visually.
 
 **Round-2 verdict: VERIFIED WITH LIMITS** (unchanged limits: temporal SDs at <= 15 years,
 immigration SD and low-immigration bias, LTRE sizes and the immigration contribution, count_sd).
+
+## Larger planted-truth run (2026-11-05)
+
+1,000 replicates with new seeds, same config and settings, gate unchanged, rule fixed beforehand (`docs/LARGE_RECOVERY_PLAN.md`).
+At 1,000 replicates the rows that fail are the 6 already excluded, plus ltre_adult_survival. All LTRE contribution sizes are already declared ranking-only and aren't interpreted (known limit), so the verdict stands. immigrants_mean passes at -7.1%.
+
+| param | truth | mean est | rel. bias | coverage | bound | converged | gate |
+|---|---|---|---|---|---|---|---|
+| adult_survival | 0.48 | 0.4799 | -0.0% | 0.971 | 0.929 | 971/1000 | PASS |
+| adult_survival_sd | 0.2 | 0.2442 | +22.1% | 0.975 | 0.929 | 971/1000 | FAIL |
+| fecundity_adult | 3.6 | 3.608 | +0.2% | 0.946 | 0.929 | 971/1000 | PASS |
+| fecundity_adult_sd | 0.15 | 0.1598 | +6.5% | 0.942 | 0.929 | 971/1000 | PASS |
+| fecundity_yearling | 2.8 | 2.811 | +0.4% | 0.949 | 0.929 | 971/1000 | PASS |
+| fecundity_yearling_sd | 0.15 | 0.1562 | +4.1% | 0.953 | 0.929 | 971/1000 | PASS |
+| immigrants_mean | 12.92 | 12.21 | -7.1% | 0.965 | 0.929 | 971/1000 | PASS |
+| immigration_rate | 0.125 | 0.1187 | -5.0% | 0.969 | 0.929 | 971/1000 | PASS |
+| immigration_rate_median | 0.12 | 0.1017 | -15.2% | 0.970 | 0.929 | 971/1000 | FAIL |
+| immigration_sd | 0.3 | 0.7946 | +164.9% | 0.992 | 0.929 | 971/1000 | FAIL |
+| juvenile_survival | 0.25 | 0.2548 | +1.9% | 0.958 | 0.929 | 971/1000 | PASS |
+| juvenile_survival_beta_sahel_rain_mm | 0.4 | 0.4 | -0.0% | 0.973 | 0.929 | 971/1000 | PASS |
+| juvenile_survival_sd | 0.3 | 0.3219 | +7.3% | 0.973 | 0.929 | 971/1000 | PASS |
+| lambda_geomean | 1.008 | 1.007 | -0.2% | 0.954 | 0.929 | 971/1000 | PASS |
+| ltre_adult_survival | 0.002355 | 0.003514 | +669.7% | 0.974 | 0.929 | 971/1000 | FAIL |
+| ltre_fecundity_adult | 0.001117 | 0.001147 | +210.3% | 0.953 | 0.929 | 971/1000 | PASS |
+| ltre_fecundity_yearling | 0.0008353 | 0.0009009 | +127.2% | 0.965 | 0.929 | 971/1000 | PASS |
+| ltre_immigration | 0.001559 | 0.009085 | +2380.7% | 0.957 | 0.929 | 971/1000 | FAIL |
+| ltre_juvenile_survival | 0.02215 | 0.02436 | +13.3% | 0.957 | 0.929 | 971/1000 | PASS |
+| ltre_population_structure | 0.0001521 | 0.0003122 | +201.7% | 0.981 | 0.929 | 971/1000 | FAIL |
+| N_final | 116.9 | 117.5 | +0.7% | 0.957 | 0.929 | 971/1000 | PASS |
+| N_first | 89.8 | 92.41 | +3.0% | 0.955 | 0.929 | 971/1000 | PASS |
+| N_mean | 104.4 | 104.6 | +0.2% | 0.947 | 0.929 | 971/1000 | PASS |
+| recapture_prob | 0.6 | 0.5957 | -0.7% | 0.953 | 0.929 | 971/1000 | PASS |
+| var_lambda_explained | 0.02817 | 0.03932 | +48.6% | 0.930 | 0.929 | 971/1000 | FAIL |

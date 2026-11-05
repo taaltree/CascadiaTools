@@ -314,3 +314,18 @@ Stale comments in `module.R`/`engine.R` (said "bootstrap over loci") corrected.
 * Per-population He/Ho/FIS were not gated by the builder; they pass here.
 
 Verdict: VERIFIED_WITH_LIMITS.
+
+## Larger planted-truth run (2026-11-05)
+
+2,000 replicates with new seeds, same config and settings, gate unchanged, rule fixed beforehand (`docs/LARGE_RECOVERY_PLAN.md`).
+OPEN on interval width. 2,000 replicates give global FST intervals coverage of 0.922 (needs 0.935), and one pairwise FST row misses at 0.934. Point estimates pass (global FST +8.0%, pairwise within 1%), as do diversity and the isolation-by-distance slope. Treat FST intervals as slightly too narrow. Near-zero FIS is listed separately under the plan's near-zero rule.
+
+| param | truth | mean est | rel. bias | coverage | bound | converged | gate |
+|---|---|---|---|---|---|---|---|
+| Fis_global | 9.874e-05 | 8.466e-05 | -269.0% | 0.959 | 0.935 | 2000/2000 | PASS |
+| Fst_global | 0.07569 | 0.08177 | +8.0% | 0.922 | 0.935 | 2000/2000 | FAIL |
+| Fst_P1_vs_P2 | 0.04682 | 0.04674 | -0.2% | 0.934 | 0.935 | 2000/2000 | FAIL |
+| Fst_P1_vs_P8 | 0.09818 | 0.0974 | -0.8% | 0.942 | 0.935 | 2000/2000 | PASS |
+| He_mean | 0.7424 | 0.7422 | -0.0% | 0.936 | 0.935 | 2000/2000 | PASS |
+| Ho_mean | 0.7424 | 0.7422 | -0.0% | 0.949 | 0.935 | 2000/2000 | PASS |
+| ibd_slope | 0.06879 | 0.06901 | +0.3% | 0.946 | 0.935 | 2000/2000 | PASS |

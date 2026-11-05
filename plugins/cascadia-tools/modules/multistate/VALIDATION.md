@@ -411,3 +411,27 @@ No core changes. Recovery results are unaffected: all recoveries use Nimble, and
 - Limits:
   - prior-pulled transition means for rare transitions, transitions out of poorly observed states, and high state uncertainty;
   - weak occasion-covariate transition slopes.
+
+## Larger planted-truth run (2026-11-05)
+
+2,000 replicates with new seeds, same config and settings, gate unchanged, rule fixed beforehand (`docs/LARGE_RECOVERY_PLAN.md`).
+All 16 rows pass at 2,000 replicates; the near-limit rows moved to +4.0% (body size on survival) and +7.9% (temperature on clearance, Monte Carlo error about 1.9 points).
+
+| param | truth | mean est | rel. bias | coverage | bound | converged | gate |
+|---|---|---|---|---|---|---|---|
+| assignment_infected | 0.85 | 0.8336 | -1.9% | 0.968 | 0.935 | 1999/2000 | PASS |
+| assignment_uninfected | 0.75 | 0.7622 | +1.6% | 0.969 | 0.935 | 1999/2000 | PASS |
+| detection_beta_survey_hours | 0.4 | 0.416 | +4.0% | 0.946 | 0.935 | 1999/2000 | PASS |
+| detection_infected | 0.5 | 0.524 | +4.8% | 0.961 | 0.935 | 1999/2000 | PASS |
+| detection_uninfected | 0.6 | 0.6133 | +2.2% | 0.953 | 0.935 | 1999/2000 | PASS |
+| initial_infected | 0.35 | 0.3605 | +3.0% | 0.964 | 0.935 | 1999/2000 | PASS |
+| initial_uninfected | 0.65 | 0.6395 | -1.6% | 0.964 | 0.935 | 1999/2000 | PASS |
+| stationary_infected | 0.4615 | 0.4699 | +1.8% | 0.967 | 0.935 | 1999/2000 | PASS |
+| stationary_uninfected | 0.5385 | 0.5301 | -1.6% | 0.967 | 0.935 | 1999/2000 | PASS |
+| survival_beta_svl_mm | 0.4 | 0.416 | +4.0% | 0.949 | 0.935 | 1999/2000 | PASS |
+| survival_infected | 0.55 | 0.5473 | -0.5% | 0.950 | 0.935 | 1999/2000 | PASS |
+| survival_uninfected | 0.75 | 0.7524 | +0.3% | 0.957 | 0.935 | 1999/2000 | PASS |
+| transition_beta_water_temp_C_infected_to_uninfected | 0.5 | 0.5394 | +7.9% | 0.945 | 0.935 | 1999/2000 | PASS |
+| transition_beta_water_temp_C_uninfected_to_infected | -0.7 | -0.7086 | -1.2% | 0.947 | 0.935 | 1999/2000 | PASS |
+| transition_infected_to_uninfected | 0.35 | 0.3642 | +4.1% | 0.957 | 0.935 | 1999/2000 | PASS |
+| transition_uninfected_to_infected | 0.3 | 0.3171 | +5.7% | 0.962 | 0.935 | 1999/2000 | PASS |

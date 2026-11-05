@@ -369,3 +369,49 @@ detection odds ratios are all correct; the 10th/90th percentile conditional
 values match the curves). One wording fix in `R/report.R`: the methods
 sentence listed the species as "coyote, gray fox" and now reads "coyote and
 gray fox" (or "A, B and C"). No estimate changed.
+
+## Larger planted-truth run (2026-11-05)
+
+5,000 replicates with new seeds, same config and settings, gate unchanged, rule fixed beforehand (`docs/LARGE_RECOVERY_PLAN.md`).
+OPEN on one detection slope, narrowly. 5,000 replicates of the full example model put the gray fox days_active detection slope +10.2% too strong (Monte Carlo 95% interval about 8.5 to 11.9%), failing the 10% bias rule, though the interval doesn't separate it from the limit. Coverage is 0.964. The interaction (-7.1%), its housing slope (+6.1%), occupancy, co-occurrence and conditional probabilities all pass. The coyote intercept (+10.9%) has only approximate truth and isn't used for the verdict.
+
+| param | truth | mean est | rel. bias | coverage | bound | converged | gate |
+|---|---|---|---|---|---|---|---|
+| A: cooccurrence_prob_coyote_gray_fox | 0.1027 | 0.102 | -0.7% | 0.968 | 0.941 | 5000/5000 | PASS |
+| A: detection_prob_coyote | 0.25 | 0.2493 | -0.3% | 0.946 | 0.941 | 5000/5000 | PASS |
+| A: detection_prob_gray_fox | 0.29 | 0.2887 | -0.4% | 0.955 | 0.941 | 5000/5000 | PASS |
+| A: interaction_coyote_gray_fox | -0.9 | -0.9526 | -5.8% | 0.963 | 0.941 | 5000/5000 | PASS |
+| A: interaction_coyote_gray_fox_beta_forest | 0.6 | 0.6482 | +8.0% | 0.945 | 0.941 | 5000/5000 | PASS |
+| A: occ_coyote_beta_forest | 0.17 | 0.1793 | +5.5% | 0.959 | 0.941 | 5000/5000 | PASS |
+| A: occ_coyote_intercept | 0.49 | 0.5205 | +6.2% | 0.964 | 0.941 | 5000/5000 | PASS |
+| A: occ_gray_fox_beta_forest | 0.3 | 0.3071 | +2.4% | 0.954 | 0.941 | 5000/5000 | PASS |
+| A: occ_gray_fox_intercept | -0.6 | -0.6044 | -0.7% | 0.967 | 0.941 | 5000/5000 | PASS |
+| A: occupancy_prob_coyote | 0.5631 | 0.5671 | +0.7% | 0.966 | 0.941 | 5000/5000 | PASS |
+| A: occupancy_prob_gray_fox | 0.2575 | 0.2558 | -0.7% | 0.964 | 0.941 | 5000/5000 | PASS |
+| A: p_coyote_beta_effort | 0.31 | 0.3121 | +0.7% | 0.950 | 0.941 | 5000/5000 | PASS |
+| A: p_gray_fox_beta_effort | 0.31 | 0.3133 | +1.1% | 0.950 | 0.941 | 5000/5000 | PASS |
+| A: prob_coyote_given_gray_fox_absent | 0.6201 | 0.6251 | +0.8% | 0.967 | 0.941 | 5000/5000 | PASS |
+| A: prob_coyote_given_gray_fox_present | 0.3989 | 0.398 | -0.2% | 0.975 | 0.941 | 5000/5000 | PASS |
+| A: prob_gray_fox_given_coyote_absent | 0.3543 | 0.3565 | +0.6% | 0.972 | 0.941 | 5000/5000 | PASS |
+| A: prob_gray_fox_given_coyote_present | 0.1824 | 0.1796 | -1.5% | 0.966 | 0.941 | 5000/5000 | PASS |
+| B: cooccurrence_prob_coyote_gray_fox | 0.1027 | 0.1034 | +0.7% | 0.965 | 0.941 | 4998/4999 | PASS |
+| B: detection_prob_coyote | 0.2513 | 0.2498 | -0.6% | 0.943 | 0.941 | 4998/4999 | PASS |
+| B: detection_prob_gray_fox | 0.2953 | 0.2903 | -1.7% | 0.947 | 0.941 | 4998/4999 | PASS |
+| B: interaction_coyote_gray_fox | -0.9 | -0.964 | -7.1% | 0.957 | 0.941 | 4998/4999 | PASS |
+| B: interaction_coyote_gray_fox_beta_log_housing_per_km2 | 0.6 | 0.6364 | +6.1% | 0.949 | 0.941 | 4998/4999 | PASS |
+| B: occ_coyote_beta_forest_pct | -0.2434 | -0.2546 | -4.6% | 0.953 | 0.941 | 4998/4999 | PASS |
+| B: occ_coyote_beta_log_housing_per_km2 | 0.1686 | 0.1771 | +5.0% | 0.953 | 0.941 | 4998/4999 | PASS |
+| B: occ_coyote_intercept | 0.4899 | 0.5433 | +10.9% | 0.961 | 0.941 | 4998/4999 | FAIL |
+| B: occ_gray_fox_beta_forest_pct | 0.7 | 0.7329 | +4.7% | 0.954 | 0.941 | 4998/4999 | PASS |
+| B: occ_gray_fox_beta_log_housing_per_km2 | 0.3 | 0.3225 | +7.5% | 0.957 | 0.941 | 4998/4999 | PASS |
+| B: occ_gray_fox_intercept | -0.6 | -0.5853 | +2.5% | 0.959 | 0.941 | 4998/4999 | PASS |
+| B: occupancy_prob_coyote | 0.5631 | 0.5714 | +1.5% | 0.958 | 0.941 | 4998/4999 | PASS |
+| B: occupancy_prob_gray_fox | 0.2575 | 0.2577 | +0.1% | 0.958 | 0.941 | 4998/4999 | PASS |
+| B: p_coyote_beta_days_active | 0.3004 | 0.31 | +3.2% | 0.951 | 0.941 | 4998/4999 | PASS |
+| B: p_coyote_beta_on_trailyes | 0.8 | 0.8066 | +0.8% | 0.950 | 0.941 | 4998/4999 | PASS |
+| B: p_gray_fox_beta_days_active | 0.3004 | 0.3312 | +10.2% | 0.964 | 0.941 | 4998/4999 | FAIL |
+| B: p_gray_fox_beta_on_trailyes | -0.2 | -0.2093 | -4.7% | 0.944 | 0.941 | 4998/4999 | PASS |
+| B: prob_coyote_given_gray_fox_absent | 0.6201 | 0.6307 | +1.7% | 0.965 | 0.941 | 4998/4999 | PASS |
+| B: prob_coyote_given_gray_fox_present | 0.3989 | 0.4003 | +0.4% | 0.966 | 0.941 | 4998/4999 | PASS |
+| B: prob_gray_fox_given_coyote_absent | 0.3543 | 0.361 | +1.9% | 0.964 | 0.941 | 4998/4999 | PASS |
+| B: prob_gray_fox_given_coyote_present | 0.1824 | 0.1811 | -0.7% | 0.960 | 0.941 | 4998/4999 | PASS |
