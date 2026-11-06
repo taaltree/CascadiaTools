@@ -33,7 +33,7 @@ the latent states.
 | MB GOF test size / power (correct model; heterogeneity SD 1.5) | unmarked | size 0.035 static, 0.06 dynamic (calibrated); power 0.105 / 0.11 (low) |
 | false-positive rate (all effects = 0) | unmarked | 0.03-0.075 for every slope (nominal 0.05) |
 
-The module is DONE at the default designs. The smaller and harder designs are its limits
+The module is DONE at the default designs, with one later change: the 120-stand worked example is OPEN on slope size (see Known limit 1). The smaller and harder designs are its limits
 (see Known limits); they are reported, not hidden, and no threshold was changed.
 
 Honesty note on the default design: the first full run used 100 sites as the default. There
@@ -268,7 +268,11 @@ driven by over-estimation.
 
 1. **Small samples inflate occupancy slopes.** At 100 sites (static), ML `psi_beta_forest`
    is +11.5% and the Nimble posterior mean +16.1% (gate fails on bias; coverage stays
-   nominal). At 50 sites, +23%. Treat slope magnitudes from < 150 sites as upper-biased;
+   nominal). At 50 sites, +23%. At the 120-stand example design, a 5,000-replicate run of the full
+   example model (`dev/occu-single/si_full_recovery_large.R`, 2026-11-04) gives forest +10.8%
+   (Monte Carlo 95% interval 9.7 to 12.0%, coverage 0.968) and elevation 11.1% too strong (9.3 to
+   12.8%, coverage 0.958), both failing the bias rule; median bias is about 6%. The earlier
+   200-replicate pass at +9.6% was within Monte Carlo error of the limit. Treat slope magnitudes from < 150 sites as upper-biased;
    direction and intervals remain usable. A penalised-likelihood estimator (unmarked
    `occuPEN`, Hutchinson et al. 2015) is not implemented.
 2. **Few surveys with low detection fail.** With 2 surveys and p = 0.2 (cumulative detection

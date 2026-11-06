@@ -16,12 +16,14 @@ ranges, missing-value counts, `check_data()` messages and aggregated results.
 2. Write `.cascadia/private.json` in the project root:
    `{"private": true, "data_dirs": ["data_raw", "data"]}` (the folders the user named).
    The CascadiaTools guard hook reads this file and, while it exists, refuses tool calls
-   that would show raw records: reading or searching those folders, and shell commands that
-   print them. CascadiaTools commands (`core/run.R ...`) are allowed, because they print
+   that would show raw records: reading or searching those folders, and Bash or PowerShell commands
+   that print them. The check runs in R, so each tool call takes a little longer while private mode is on. CascadiaTools commands (`core/run.R ...`) are allowed, because they print
    summaries and results, not records.
 3. Add read-deny rules to the project's `.claude/settings.json` (create it if missing,
    merge if present), one per folder: `"permissions": {"deny": ["Read(./data_raw/**)", "Read(./data/**)"]}`.
    These block the Read, Grep and Glob tools and common file commands for those paths.
+   Then test it: try to read a file in one of those folders, and show the user that it is refused.
+   If it isn't refused, say so plainly and don't describe the data as protected.
 4. Tell the user, plainly, what this does and does not protect:
    - Protected: the agent cannot open or print the files; it works through summaries.
    - Still sent: summaries, column names, error messages, estimates and figures.

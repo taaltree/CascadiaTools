@@ -216,3 +216,20 @@ include rug and 50/95% bands.
   - spPGOcc on non-spatial data inflates slopes about 10% relative to PGOcc;
   - spIntPGOcc is not validated.
 - **Open item:** Nimble exact-GP vs spPGOcc result still pending (chinook job).
+
+## Larger planted-truth run (2026-11-05)
+
+3,000 replicates with new seeds, same config and settings, gate unchanged, rule fixed beforehand (`docs/LARGE_RECOVERY_PLAN.md`).
+At 3,000 replicates the canopy slope is +9.5% (Monte Carlo error 0.6 points) and the elevation slope 8.8% too strong; both pass, with canopy close to the limit. Only spatial variance and effective range fail, as already stated.
+
+| param | truth | mean est | rel. bias | coverage | bound | converged | gate |
+|---|---|---|---|---|---|---|---|
+| detection_prob | 0.285 | 0.2814 | -1.3% | 0.944 | 0.938 | 2999/3000 | PASS |
+| effective_range_km | 8 | 9.829 | +22.9% | 1.000 | 0.938 | 2999/3000 | FAIL |
+| mean_occupancy | 0.4457 | 0.4555 | +2.3% | 0.951 | 0.938 | 2999/3000 | PASS |
+| occupancy_prob | 0.426 | 0.4414 | +3.6% | 0.963 | 0.938 | 2999/3000 | PASS |
+| p_beta_days_active | 0.38 | 0.3842 | +1.1% | 0.946 | 0.938 | 2999/3000 | PASS |
+| prop_sites_occupied | 0.4462 | 0.4549 | +2.0% | 0.953 | 0.938 | 2999/3000 | PASS |
+| psi_beta_canopy_cover_pct | 0.9 | 0.9857 | +9.5% | 0.960 | 0.938 | 2999/3000 | PASS |
+| psi_beta_elevation_m | -0.4 | -0.4353 | -8.8% | 0.951 | 0.938 | 2999/3000 | PASS |
+| spatial_variance | 1 | 1.405 | +40.5% | 1.000 | 0.938 | 2999/3000 | FAIL |

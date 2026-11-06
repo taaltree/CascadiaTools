@@ -44,7 +44,7 @@ So `coverage` of `p_qext_*` is the calibration of the risk interval against the 
   Estimates that say "< 1%" at 50 years have a mean true risk of 0.19-0.20.
 - This is the problem Ludwig (1999) and Fieberg & Ellner (2000) describe, and no thresholds were widened to hide it.
 - The report therefore tells the reader to read the interval, flags every horizon beyond 20% of the data span,
-  and states this calibration result in plain words.
+  and states this calibration result explicitly.
 
 ## 1. Count model, diffusion, default design (nsim = 200)
 

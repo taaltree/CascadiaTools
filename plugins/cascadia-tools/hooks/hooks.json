@@ -2,9 +2,9 @@
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "Read|Grep|Glob|Bash|Edit|Write",
+        "matcher": "Read|Grep|Glob|Bash|PowerShell|Edit|Write|NotebookEdit",
         "hooks": [
-          { "type": "command", "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/scripts/private_guard.py\"", "timeout": 10 }
+          { "type": "command", "command": "bash \"${CLAUDE_PLUGIN_ROOT}/scripts/private_guard\"", "timeout": 30 }
         ]
       }
     ]

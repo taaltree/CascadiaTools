@@ -39,7 +39,8 @@ and a validation record (`VALIDATION.md`) with its recovery results and known li
 ## Install (about 30 minutes, once)
 
 1. **Install R 4.5 or newer** from https://cran.r-project.org.
-   Windows: also install Rtools. Mac: run `xcode-select --install` in Terminal.
+   Windows: also install Rtools and [Git for Windows](https://git-scm.com/downloads/win) (the run
+   scripts need its Bash shell). Mac: run `xcode-select --install` in Terminal.
 2. **Install Claude Code**: the Claude desktop app (Code tab) or the terminal version;
    see https://claude.com/claude-code.
 3. **Add CascadiaTools.**

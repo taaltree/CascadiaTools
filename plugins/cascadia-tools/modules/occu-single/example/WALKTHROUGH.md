@@ -171,9 +171,7 @@ All seven figures were opened and checked: labels are in plain units, probabilit
 a 0-1 axis, bands and rugs are present, and the factor (observer) is drawn as points with
 intervals. No changes to the `figures:` block were needed.
 
-**9. Gate (`eco-acceptance-gate`): DONE.** Recovery passed at this design (both runs), the
-fit converged with no boundary estimates, goodness of fit showed no lack of fit, the report
-sentences match the table, and every number was made by a script listed below.
+**9. Gate (`eco-acceptance-gate`): OPEN on effect size.** The published run passed the forest slope at +9.6%, but a later 5,000-replicate run of the same process puts the forest slope at +10.8% and the elevation slope at 11.1% too strong, both failing the 10% bias rule (coverage 0.968 and 0.958 still passes). Occupancy, detection, convergence and goodness of fit all pass. The agent reports direction, intervals, occupancy and detection, and states that the slope sizes are somewhat too strong. See limit 1 below.
 
 **10. Deliver.** Summary for the researcher: *"Woodpeckers were more likely to occupy
 stands with more forest cover: occupancy rose from 0.09 (95% CI 0.03-0.28) at 22% forest to
@@ -209,9 +207,11 @@ signal that 120 stands cannot pin these effects down precisely.
 ## (f) Limits that matter at this design (from `VALIDATION.md`)
 
 1. **Small samples inflate occupancy slopes** (known limit 1). Below about 150 sites the
-   forest effect is biased away from zero (+11.5% at 100 sites, failing the gate). At 120
-   stands it was +6.0% (Run A) and +9.6% (Run B), just inside the 10% limit. Trust the
-   direction; treat the size as possibly a little high.
+   forest effect is biased away from zero. At 120 stands, 5,000 replicates of this example's
+   full model give +10.8% for forest (Monte Carlo 95% interval 9.7 to 12.0%) and 11.1% too
+   strong for elevation, both failing the 10% limit (median bias about 6%). Runs of 200
+   replicates land on either side of the limit: +6.0% (Run A), +9.6% (Run B), and +12.7% in a
+   separate rehearsal. Trust the direction and intervals; treat the sizes as somewhat too strong.
 2. **Elevation and observer effects have low power here.** Run B detected a true elevation
    effect of this size only 43% of the time, and the observer differences 16-32% of the
    time. A "no effect" result for these would not have meant no effect.

@@ -189,7 +189,7 @@ one-and-a-half columns wide, because at single width the long legend title squee
 the x tick labels overlapped; `coefficients` uses x limits -0.1 to 1.6 so the last tick label
 is not cut off.
 
-**9. Gate verdict: DONE.** The planted-truth check passed at this design (8/8), the fit
+**9. Gate verdict: OPEN on the density interval.** A later 2,000-replicate run gives density interval coverage of 0.930 (needs 0.935), with point bias +4.4%; the other rows pass. In the published 100-replicate check (8/8 passed), the fit
 converged, the fit checks passed, a second engine agrees, and every number comes from a
 rerunnable command.
 

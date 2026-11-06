@@ -57,4 +57,24 @@ eco_require <- function(pkgs) {
   invisible(TRUE)
 }
 
+# Forked workers (parallel::mclapply) don't exist on Windows, and cores > 1 is an error there.
+# CASCADIATOOLS_PARALLEL=psock forces socket workers elsewhere, to test that route.
+eco_can_fork <- function() {
+  .Platform$OS.type != "windows" && !identical(Sys.getenv("CASCADIATOOLS_PARALLEL"), "psock")
+}
+
+# Apply f over xs on socket workers. Core helpers live in globalenv, so each worker loads core;
+# module code travels with f's environment.
+eco_psock_lapply <- function(xs, f, cores) {
+  cl <- parallel::makeCluster(min(cores, length(xs)))
+  on.exit(parallel::stopCluster(cl), add = TRUE)
+  parallel::clusterCall(cl, function(lp, root) {
+    .libPaths(lp)
+    Sys.setenv(OMP_NUM_THREADS = "1", OPENBLAS_NUM_THREADS = "1", MKL_NUM_THREADS = "1", CASCADIATOOLS_ROOT = root)
+    source(file.path(root, "core", "load.R"))
+    NULL
+  }, .libPaths(), eco_root())
+  parallel::parLapply(cl, xs, f)
+}
+
 eco_setup_libs()

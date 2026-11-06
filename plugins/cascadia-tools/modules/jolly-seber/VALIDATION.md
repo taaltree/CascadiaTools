@@ -393,3 +393,56 @@ scripts/ejob -c 10 -m 40 -t 2:00:00 -- scripts/Rscript dev/jolly-seber/crosschec
 scripts/ejob -c 16 -m 32 -t 3:00:00 -- scripts/Rscript core/run.R power jolly-seber --vary n_occasions=4,5,6,8,10,12 --nsim 50 --cores 16 --seed 6 --out results/jolly-seber/power_occasions
 scripts/Rscript core/run.R fit jolly-seber --config modules/jolly-seber/example/config.yaml --out results/jolly-seber/example
 ```
+
+## Larger planted-truth run (2026-11-05)
+
+5,000 replicates with new seeds, same config and settings, gate unchanged, rule fixed beforehand (`docs/LARGE_RECOVERY_PLAN.md`).
+Only the three first-interval recruitment rows fail (entrants_2, entry_prob_2, recruitment_rate_1), the same three already excluded from interpretation. Every interpreted row passes, including survival_beta_male (+3.9%) and recruitment_rate_6 (+4.9%).
+
+| param | truth | mean est | rel. bias | coverage | bound | converged | gate |
+|---|---|---|---|---|---|---|---|
+| abundance_1 | 117 | 114.1 | -2.4% | 0.958 | 0.941 | 5000/5000 | PASS |
+| abundance_2 | 112.8 | 114.5 | +1.6% | 0.970 | 0.941 | 5000/5000 | PASS |
+| abundance_3 | 109.6 | 111.6 | +1.9% | 0.964 | 0.941 | 5000/5000 | PASS |
+| abundance_4 | 107.2 | 109.5 | +2.2% | 0.967 | 0.941 | 5000/5000 | PASS |
+| abundance_5 | 105.4 | 107.8 | +2.3% | 0.962 | 0.941 | 5000/5000 | PASS |
+| abundance_6 | 104.2 | 106.6 | +2.4% | 0.963 | 0.941 | 5000/5000 | PASS |
+| abundance_7 | 103.1 | 105.8 | +2.7% | 0.958 | 0.941 | 5000/5000 | PASS |
+| abundance_8 | 102.4 | 105.4 | +3.0% | 0.959 | 0.941 | 5000/5000 | PASS |
+| detection | 0.4 | 0.3988 | -0.3% | 0.954 | 0.941 | 5000/5000 | PASS |
+| detection_beta_effort | 0.45 | 0.4526 | +0.6% | 0.963 | 0.941 | 5000/5000 | PASS |
+| entrants_2 | 20.44 | 24.35 | +21.9% | 0.982 | 0.941 | 5000/5000 | FAIL |
+| entrants_3 | 20.35 | 20.87 | +4.4% | 0.983 | 0.941 | 5000/5000 | PASS |
+| entrants_4 | 20.5 | 20.82 | +2.9% | 0.980 | 0.941 | 5000/5000 | PASS |
+| entrants_5 | 20.4 | 20.68 | +2.7% | 0.979 | 0.941 | 5000/5000 | PASS |
+| entrants_6 | 20.52 | 20.71 | +2.0% | 0.982 | 0.941 | 5000/5000 | PASS |
+| entrants_7 | 20.44 | 20.7 | +2.3% | 0.977 | 0.941 | 5000/5000 | PASS |
+| entrants_8 | 20.41 | 20.83 | +3.2% | 0.976 | 0.941 | 5000/5000 | PASS |
+| entry_prob_1 | 0.45 | 0.4243 | -5.7% | 0.953 | 0.941 | 5000/5000 | PASS |
+| entry_prob_2 | 0.07857 | 0.094 | +19.6% | 0.985 | 0.941 | 5000/5000 | FAIL |
+| entry_prob_3 | 0.07857 | 0.08099 | +3.1% | 0.986 | 0.941 | 5000/5000 | PASS |
+| entry_prob_4 | 0.07857 | 0.08078 | +2.8% | 0.980 | 0.941 | 5000/5000 | PASS |
+| entry_prob_5 | 0.07857 | 0.08017 | +2.0% | 0.982 | 0.941 | 5000/5000 | PASS |
+| entry_prob_6 | 0.07857 | 0.08025 | +2.1% | 0.978 | 0.941 | 5000/5000 | PASS |
+| entry_prob_7 | 0.07857 | 0.08002 | +1.8% | 0.980 | 0.941 | 5000/5000 | PASS |
+| entry_prob_8 | 0.07857 | 0.07946 | +1.1% | 0.977 | 0.941 | 5000/5000 | PASS |
+| growth_rate_1 | 0.9664 | 1.03 | +6.7% | 0.977 | 0.941 | 5000/5000 | PASS |
+| growth_rate_2 | 0.9728 | 0.9873 | +1.6% | 0.983 | 0.941 | 5000/5000 | PASS |
+| growth_rate_3 | 0.9799 | 0.9915 | +1.3% | 0.976 | 0.941 | 5000/5000 | PASS |
+| growth_rate_4 | 0.9851 | 0.9938 | +1.0% | 0.978 | 0.941 | 5000/5000 | PASS |
+| growth_rate_5 | 0.9902 | 0.9985 | +1.0% | 0.975 | 0.941 | 5000/5000 | PASS |
+| growth_rate_6 | 0.9914 | 1.001 | +1.1% | 0.975 | 0.941 | 5000/5000 | PASS |
+| growth_rate_7 | 0.9955 | 1.004 | +1.0% | 0.970 | 0.941 | 5000/5000 | PASS |
+| growth_rate_mean | 0.9813 | 0.99 | +0.9% | 0.949 | 0.941 | 5000/5000 | PASS |
+| prop_male | 0.4495 | 0.4486 | -0.2% | 0.944 | 0.941 | 5000/5000 | PASS |
+| recruitment_rate_1 | 0.1763 | 0.2411 | +40.3% | 0.979 | 0.941 | 5000/5000 | FAIL |
+| recruitment_rate_2 | 0.182 | 0.1961 | +10.2% | 0.985 | 0.941 | 5000/5000 | PASS |
+| recruitment_rate_3 | 0.1888 | 0.1986 | +6.9% | 0.977 | 0.941 | 5000/5000 | PASS |
+| recruitment_rate_4 | 0.1921 | 0.1997 | +5.6% | 0.977 | 0.941 | 5000/5000 | PASS |
+| recruitment_rate_5 | 0.1965 | 0.2033 | +4.7% | 0.978 | 0.941 | 5000/5000 | PASS |
+| recruitment_rate_6 | 0.1981 | 0.2053 | +4.9% | 0.974 | 0.941 | 5000/5000 | PASS |
+| recruitment_rate_7 | 0.1999 | 0.2078 | +5.4% | 0.972 | 0.941 | 5000/5000 | PASS |
+| superpopulation_size | 260 | 263 | +1.2% | 0.957 | 0.941 | 5000/5000 | PASS |
+| survival | 0.82 | 0.8176 | -0.3% | 0.952 | 0.941 | 5000/5000 | PASS |
+| survival_beta_male | -0.4 | -0.3843 | +3.9% | 0.950 | 0.941 | 5000/5000 | PASS |
+| survival_male | 0.7533 | 0.7538 | +0.1% | 0.945 | 0.941 | 5000/5000 | PASS |

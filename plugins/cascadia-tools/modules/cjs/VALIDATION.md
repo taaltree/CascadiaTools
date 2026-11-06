@@ -299,3 +299,21 @@ release; not validated (the transient runs above use equal intervals).
 **Verdict: VERIFIED_WITH_LIMITS.** Passes at the default design and at an independent design
 with unequal intervals on both engines; controls fail as they should and the FPR is about 0.05;
 the documented limits (Bayesian bias at low-information designs, random-year SD bias) stand.
+
+## Larger planted-truth run (2026-11-05)
+
+5,000 replicates with new seeds, same config and settings, gate unchanged, rule fixed beforehand (`docs/LARGE_RECOVERY_PLAN.md`).
+All 10 rows pass at 5,000 replicates; the near-limit rows moved to +2.3% (body mass) and -7.7% (transient proportion).
+
+| param | truth | mean est | rel. bias | coverage | bound | converged | gate |
+|---|---|---|---|---|---|---|---|
+| detection_female | 0.45 | 0.4524 | +0.5% | 0.956 | 0.941 | 5000/5000 | PASS |
+| detection_male | 0.5743 | 0.5744 | +0.0% | 0.950 | 0.941 | 5000/5000 | PASS |
+| p_beta_sex_male | 0.5 | 0.4966 | -0.7% | 0.952 | 0.941 | 5000/5000 | PASS |
+| phi_beta_body_mass | 0.25 | 0.2557 | +2.3% | 0.950 | 0.941 | 5000/5000 | PASS |
+| phi_beta_sex_male | 0.3 | 0.3161 | +5.4% | 0.946 | 0.941 | 5000/5000 | PASS |
+| phi_beta_winter_severity | -0.4 | -0.4126 | -3.1% | 0.957 | 0.941 | 5000/5000 | PASS |
+| proportion_transient_female | 0.25 | 0.2308 | -7.7% | 0.966 | 0.941 | 5000/5000 | PASS |
+| proportion_transient_male | 0.25 | 0.2505 | +0.2% | 0.955 | 0.941 | 5000/5000 | PASS |
+| survival_female | 0.55 | 0.546 | -0.7% | 0.947 | 0.941 | 5000/5000 | PASS |
+| survival_male | 0.6226 | 0.6222 | -0.1% | 0.955 | 0.941 | 5000/5000 | PASS |

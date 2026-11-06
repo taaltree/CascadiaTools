@@ -10,7 +10,12 @@ The toolkit is at `${CLAUDE_PLUGIN_ROOT}`. Explain each step in one plain senten
 many users have never used a terminal. Never install anything without saying what it
 is and roughly how long it takes.
 
+0. **Windows only: Git for Windows.** The toolkit's run scripts need the Bash shell it provides. Run
+   `git --version`. If it is missing, or you have only a PowerShell tool and no Bash tool, tell the user to
+   install it from https://git-scm.com/downloads/win with the default options and restart Claude. Stop until Bash works.
 1. **R.** Run `"${CLAUDE_PLUGIN_ROOT}/scripts/Rscript" -e 'cat(R.version.string)'`.
+   The wrapper looks on the PATH and in the usual install folders. If R is installed but not found, set the
+   environment variable `CASCADIATOOLS_R` to its folder, for example `C:\Program Files\R\R-4.5.2`.
    - Not found, or older than 4.5: tell the user to install the latest R from
      https://cran.r-project.org (Download R for Windows / macOS), with the default
      options, then restart Claude. Stop here until R works.

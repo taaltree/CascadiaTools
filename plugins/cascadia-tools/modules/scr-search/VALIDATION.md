@@ -421,3 +421,19 @@ Reading:
    labels thinned (`report.R`).
 5. Example re-fitted with the new default (`results/scr-search/example/`).
 No core files changed.
+
+## Larger planted-truth run (2026-11-05)
+
+2,000 replicates with new seeds, same config and settings, gate unchanged, rule fixed beforehand (`docs/LARGE_RECOVERY_PLAN.md`).
+OPEN on the density interval. 2,000 replicates give the density interval coverage of 0.930 (needs 0.935), with point bias +4.4%. All other rows pass, including abundance (+4.8%, coverage 0.949), the forest effect, detection and sigma. Treat the density interval as slightly too narrow.
+
+| param | truth | mean est | rel. bias | coverage | bound | converged | gate |
+|---|---|---|---|---|---|---|---|
+| abundance | 78.11 | 81.8 | +4.8% | 0.949 | 0.935 | 1999/2000 | PASS |
+| density_beta_forest | 0.5 | 0.5078 | +1.6% | 0.951 | 0.935 | 1999/2000 | PASS |
+| density_per_km2 | 0.1 | 0.1044 | +4.4% | 0.929 | 0.935 | 1999/2000 | FAIL |
+| detection_beta_experienced_team | 0.6 | 0.5723 | -4.6% | 0.949 | 0.935 | 1999/2000 | PASS |
+| home_range_area_95 | 42.35 | 44.08 | +4.1% | 0.947 | 0.935 | 1999/2000 | PASS |
+| lambda0_per_km | 0.2 | 0.2058 | +2.9% | 0.957 | 0.935 | 1999/2000 | PASS |
+| samples_per_track_through_centre | 0.752 | 0.775 | +3.1% | 0.959 | 0.935 | 1999/2000 | PASS |
+| sigma | 1500 | 1523 | +1.5% | 0.947 | 0.935 | 1999/2000 | PASS |

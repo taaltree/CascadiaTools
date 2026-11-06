@@ -178,7 +178,7 @@ convergence not applicable (closed form); goodness of fit OK (0/94 HWE);
 independent route: estimators match hierfstat 0.5.11 to < 1e-10
 (VALIDATION.md section 6); negative control: a naive estimator fails the
 gate (VALIDATION.md section 4); reproducible commands below.
-**Verdict: DONE**, with the limits in (f).
+**Verdict: OPEN on interval width.** A later 2,000-replicate run gives global FST interval coverage of 0.922 (needs 0.935); point estimates pass. The other limits are in (f).
 
 **10. Deliver.** Summary for the researcher:
 

@@ -1,0 +1,14 @@
+#!/bin/bash
+# CascadiaTools data-private guard (PreToolUse hook). Exits at once unless this project has turned
+# on private mode, so normal sessions pay nothing and never start R. Private mode runs the check in
+# R, which every CascadiaTools user has; if R can't run the check, the tool call is refused.
+proj="${CLAUDE_PROJECT_DIR:-$PWD}"
+[[ -f "$proj/.cascadia/private.json" ]] || exit 0
+here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+export CLAUDE_PROJECT_DIR="$proj"
+if out="$(bash "$here/Rscript" "$here/private_guard.R" 2>/dev/null)"; then
+  [[ -n "$out" ]] && printf '%s\n' "$out"
+  exit 0
+fi
+printf '%s\n' '{"hookSpecificOutput": {"hookEventName": "PreToolUse", "permissionDecision": "deny", "permissionDecisionReason": "Data-private mode is on, but its guard could not run, because R or the jsonlite package is missing. Tool calls are refused until this is fixed. Install R and run the CascadiaTools setup, or, if you intend to leave private mode, delete .cascadia/private.json yourself."}}'
+exit 0

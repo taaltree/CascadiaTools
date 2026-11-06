@@ -235,7 +235,7 @@ with readable tick labels, plain-language axis and legend labels (set in the `fi
 block of `config.yaml`, including short names for the coefficient plot), and the
 two-panel key figure has its legends under the panels so the curves get the full width.
 
-**9. Gate (`eco-acceptance-gate`): DONE.** Plan declared before fitting; planted truth
+**9. Gate (`eco-acceptance-gate`): OPEN on one detection slope.** A later 5,000-replicate run puts the gray fox days_active slope at +10.2%, just past the limit; the interaction and occupancy rows pass. In the published run: plan declared before fitting; planted truth
 passed at this design (Run A 17/17; Run B 21/21 pooled over 400 replicates); the fit
 converged with no boundary estimates; goodness of fit showed no lack of fit; independent
 routes (hand-written likelihood, Nimble) agree; the negative control (ignoring detection)
